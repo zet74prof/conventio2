@@ -7,6 +7,8 @@ use App\Dto\SignatureRequestConfig;
 use App\Dto\SignerInfo;
 use App\Dto\YouTrustConfig;
 use App\Exception\YouTrustApiException;
+use Symfony\Component\Mime\Part\DataPart;
+use Symfony\Component\Mime\Part\Multipart\FormDataPart;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
@@ -159,21 +161,27 @@ class YouTrustService
     public function uploadDocument(string $signatureRequestId, DocumentUpload $document): array
     {
         $url = $this->config->getBaseUrl() . '/signature_requests/' . $signatureRequestId . '/documents';
+        $fileContent = base64_decode(explode(',', $document->getDataUri())[1]);
 
-        $body = [
+        $formData = new FormDataPart([
+            'file' => new DataPart($fileContent, $document->getFileName(), $document->getMimeType()),
             'nature' => $document->nature,
             'parse_anchors' => $document->parseAnchors ? 'true' : 'false',
-            'file' => $document->getDataUri(),
-        ];
+        ]);
 
-        $response = $this->request('POST', $url, $body, [
-            'headers' => [
-                'Content-Type' => 'multipart/form-data',
-            ],
+        $response = $this->httpClient->request('POST', $url, [
+            'headers' => array_merge(
+                $formData->getPreparedHeaders()->toArray(),
+                [
+                    'Accept' => 'application/json',
+                    'Authorization' => 'Bearer ' . $this->config->apiKey,
+                ]
+            ),
+            'timeout' => $this->config->timeout,
+            'body' => $formData->bodyToIterable(),
         ]);
         $result = $this->handleResponse($response);
 
-        // YouTrust returns data in a 'data' field
         return $result['data'] ?? $result;
     }
 
@@ -199,29 +207,27 @@ class YouTrustService
         bool $parseAnchors = true
     ): array {
         $url = $this->config->getBaseUrl() . '/signature_requests/' . $signatureRequestId . '/documents';
+        $fileContent = base64_decode($base64Content);
 
-        $dataUri = sprintf(
-            'data:%s;name=%s;base64,%s',
-            $mimeType,
-            rawurlencode($fileName),
-            $base64Content
-        );
-
-        $body = [
+        $formData = new FormDataPart([
+            'file' => new DataPart($fileContent, $fileName, $mimeType),
             'nature' => $nature,
             'parse_anchors' => $parseAnchors ? 'true' : 'false',
-            'file' => $dataUri,
-        ];
-
-        $response = $this->request('POST', $url, $body, [
-            'headers' => [
-                'Content-Type' => 'multipart/form-data',
-            ],
         ]);
 
+        $response = $this->httpClient->request('POST', $url, [
+            'headers' => array_merge(
+                $formData->getPreparedHeaders()->toArray(),
+                [
+                    'Accept' => 'application/json',
+                    'Authorization' => 'Bearer ' . $this->config->apiKey,
+                ]
+            ),
+            'timeout' => $this->config->timeout,
+            'body' => $formData->bodyToIterable(),
+        ]);
         $result = $this->handleResponse($response);
 
-        // YouTrust returns data in a 'data' field
         return $result['data'] ?? $result;
     }
 
@@ -404,7 +410,7 @@ class YouTrustService
         }
 
         // Step 2: Upload the document
-        $this->uploadDocument($signatureRequestId, $document);
+        $response = $this->uploadDocument($signatureRequestId, $document);
 
         // Step 3: Add all signers
         foreach ($signers as $index => $signer) {
@@ -528,21 +534,8 @@ class YouTrustService
             'timeout' => $this->config->timeout,
         ];
 
-        // Handle body based on Content-Type
         if (null !== $body) {
-            // Check if custom Content-Type is set to multipart
-            $isMultipart = isset($options['headers']['Content-Type'])
-                && $options['headers']['Content-Type'] === 'multipart/form-data';
-
-            if ($isMultipart) {
-                // For multipart, pass body as-is (Symfony HttpClient will handle encoding)
-                $defaultOptions['body'] = $body;
-                $defaultOptions['headers']['Content-Type'] = 'multipart/form-data';
-            } else {
-                // For JSON requests, encode body
-                $defaultOptions['headers']['Content-Type'] = 'application/json';
-                $defaultOptions['body'] = json_encode($body);
-            }
+            $defaultOptions['body'] = $body;
         }
 
         // Merge custom headers into default headers (preserving Authorization)

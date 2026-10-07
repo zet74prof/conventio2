@@ -113,7 +113,7 @@ class YouTrustTestController extends AbstractController
             // Save the uploaded file temporarily
             $tempPath = sys_get_temp_dir() . '/' . uniqid('you_trust_') . '.pdf';
             $movedFile = $documentFile->move(sys_get_temp_dir(), basename($tempPath));
-            
+
             // Verify the file was moved successfully
             if (!$movedFile || !file_exists($tempPath)) {
                 $this->addFlash('error', 'Failed to save uploaded document');
@@ -259,7 +259,7 @@ class YouTrustTestController extends AbstractController
 
                 $tempPath = sys_get_temp_dir() . '/' . uniqid('test_') . '.' . $file->guessExtension();
                 $movedFile = $file->move(sys_get_temp_dir(), basename($tempPath));
-                
+
                 // Verify the file was moved successfully
                 if (!$movedFile || !file_exists($tempPath)) {
                     $this->addFlash('error', 'Failed to save uploaded file');
