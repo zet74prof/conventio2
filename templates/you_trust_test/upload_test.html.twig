@@ -1,0 +1,293 @@
+{# templates/you_trust_test/upload_test.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Upload Test - YouTrust Test{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    .you-trust-test {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+    }
+    .you-trust-test h1 {
+        color: #2c3e50;
+        border-bottom: 2px solid #1abc9c;
+        padding-bottom: 10px;
+    }
+    .you-trust-test .card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    .you-trust-test .card h2 {
+        color: #1abc9c;
+        margin-top: 0;
+    }
+    .you-trust-test nav.test-nav {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+    }
+    .you-trust-test nav.test-nav a {
+        padding: 10px 15px;
+        background: #ecf0f1;
+        color: #2c3e50;
+        text-decoration: none;
+        border-radius: 4px;
+        transition: background 0.3s;
+    }
+    .you-trust-test nav.test-nav a:hover {
+        background: #bdc3c7;
+    }
+    .you-trust-test .alert {
+        padding: 15px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+    }
+    .you-trust-test .alert-success {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+    .you-trust-test .alert-error {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+    .you-trust-test .alert-info {
+        background: #d1ecf1;
+        color: #0c5460;
+        border: 1px solid #bee5eb;
+    }
+    .you-trust-test .form-group {
+        margin-bottom: 20px;
+    }
+    .you-trust-test .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #2c3e50;
+    }
+    .you-trust-test .form-group input[type="file"] {
+        width: 100%;
+        padding: 15px;
+        border: 2px dashed #1abc9c;
+        border-radius: 4px;
+        background: #f8f9fa;
+        font-size: 14px;
+    }
+    .you-trust-test .form-group input[type="file"]:hover {
+        background: #e8f4fc;
+    }
+    .you-trust-test .btn {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s;
+        text-decoration: none;
+        display: inline-block;
+        margin-right: 10px;
+    }
+    .you-trust-test .btn-primary {
+        background: #3498db;
+        color: white;
+    }
+    .you-trust-test .btn-primary:hover {
+        background: #2980b9;
+    }
+    .you-trust-test .btn-success {
+        background: #27ae60;
+        color: white;
+    }
+    .you-trust-test .file-info {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 4px;
+        border-left: 4px solid #1abc9c;
+        margin-top: 20px;
+    }
+    .you-trust-test .file-info-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+    }
+    .you-trust-test .file-info-item:last-child {
+        margin-bottom: 0;
+    }
+    .you-trust-test .file-info-label {
+        font-weight: bold;
+        color: #2c3e50;
+    }
+    .you-trust-test .file-info-value {
+        color: #7f8c8d;
+    }
+    .you-trust-test .drop-zone {
+        border: 2px dashed #1abc9c;
+        border-radius: 8px;
+        padding: 40px;
+        text-align: center;
+        background: #f8f9fa;
+        margin: 20px 0;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    .you-trust-test .drop-zone:hover {
+        background: #e8f4fc;
+        border-color: #16a085;
+    }
+    .you-trust-test .drop-zone.dragover {
+        background: #e8f4fc;
+        border-color: #16a085;
+        border-style: solid;
+    }
+    .you-trust-test .drop-zone i {
+        font-size: 48px;
+        color: #1abc9c;
+        margin-bottom: 10px;
+    }
+    .you-trust-test .drop-zone p {
+        color: #7f8c8d;
+        margin-bottom: 5px;
+    }
+    .you-trust-test .drop-zone small {
+        color: #95a5a6;
+        font-size: 12px;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="you-trust-test">
+    <h1>📁 File Upload Test</h1>
+
+    <nav class="test-nav">
+        <a href="{{ path('test_you_trust_index') }}">🏠 Create Request</a>
+        <a href="{{ path('test_you_trust_list') }}">📊 List Requests</a>
+        <a href="{{ path('test_you_trust_ping') }}">🏓 Ping API</a>
+        <a href="{{ path('test_you_trust_upload_test') }}">📁 Upload Test</a>
+    </nav>
+
+    {% for type, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ type }}">{{ message|raw }}</div>
+        {% endfor %}
+    {% endfor %}
+
+    <div class="card">
+        <h2>📤 Test File Upload</h2>
+        <p class="alert alert-info">
+            This page tests file upload functionality separately. Use it to verify that your server 
+            can handle file uploads correctly before creating a full signature request.
+        </p>
+
+        <form action="{{ path('test_you_trust_upload_test') }}" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="test_file">Select a PDF file to upload:</label>
+                <input type="file" id="test_file" name="test_file" accept=".pdf,.doc,.docx,.txt" required>
+            </div>
+
+            <div class="drop-zone" id="dropZone" onclick="document.getElementById('test_file').click()">
+                <i>📄</i>
+                <p><strong>Drop files here or click to browse</strong></p>
+                <small>Supports: PDF, DOC, DOCX, TXT (Max: 10MB)</small>
+            </div>
+
+            <input type="hidden" name="MAX_FILE_SIZE" value="10485760">
+
+            <div style="text-align: center; margin-top: 20px;">
+                <button type="submit" class="btn btn-primary">
+                    📥 Upload File
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="card">
+        <h2>ℹ️ Upload Requirements</h2>
+        <div class="file-info">
+            <div class="file-info-item">
+                <span class="file-info-label">Supported Formats:</span>
+                <span class="file-info-value">PDF, DOC, DOCX, TXT</span>
+            </div>
+            <div class="file-info-item">
+                <span class="file-info-label">Max File Size:</span>
+                <span class="file-info-value">10 MB</span>
+            </div>
+            <div class="file-info-item">
+                <span class="file-info-label">For YouTrust:</span>
+                <span class="file-info-value">PDF recommended for signatures</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>💡 Tips for Successful Uploads</h2>
+        <ul style="padding-left: 20px; line-height: 1.8; color: #7f8c8d;">
+            <li>Make sure your PHP <code>upload_max_filesize</code> is at least 10MB</li>
+            <li>Check that <code>post_max_size</code> in php.ini is large enough</li>
+            <li>For YouTrust, PDF documents work best for signature anchors</li>
+            <li>Ensure the file has proper read permissions</li>
+            <li>If using a local server, check file upload settings</li>
+        </ul>
+    </div>
+
+    <div class="card" style="text-align: center;">
+        <a href="{{ path('test_you_trust_index') }}" class="btn btn-primary">
+            ← Back to Main Test Form
+        </a>
+    </div>
+</div>
+
+<script>
+    // Drag and drop functionality
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('test_file');
+
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('dragover');
+    });
+
+    dropZone.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+        
+        if (e.dataTransfer.files.length) {
+            fileInput.files = e.dataTransfer.files;
+            // Trigger form submission or show file info
+            // For now, just show that file was selected
+            const fileName = e.dataTransfer.files[0].name;
+            dropZone.innerHTML = `
+                <i>✅</i>
+                <p><strong>File selected: ${fileName}</strong></p>
+                <small>Ready to upload!</small>
+            `;
+        }
+    });
+
+    // Update drop zone when file is selected via input
+    fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length) {
+            const fileName = e.target.files[0].name;
+            const fileSize = (e.target.files[0].size / 1024 / 1024).toFixed(2);
+            dropZone.innerHTML = `
+                <i>✅</i>
+                <p><strong>File: ${fileName}</strong></p>
+                <small>Size: ${fileSize} MB - Ready to upload!</small>
+            `;
+        }
+    });
+</script>
+{% endblock %}

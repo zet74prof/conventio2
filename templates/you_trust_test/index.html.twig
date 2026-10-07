@@ -1,0 +1,485 @@
+{# templates/you_trust_test/index.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}YouTrust Test - Signature Request Creator{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    .you-trust-test {
+        max-width: 1200px;
+        margin: 20px auto;
+        padding: 20px;
+    }
+    .you-trust-test h1 {
+        color: #2c3e50;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+    }
+    .you-trust-test .card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    .you-trust-test .card h2 {
+        color: #3498db;
+        margin-top: 0;
+    }
+    .you-trust-test .form-section {
+        margin-bottom: 30px;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 8px;
+    }
+    .you-trust-test .form-group {
+        margin-bottom: 15px;
+    }
+    .you-trust-test .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #2c3e50;
+    }
+    .you-trust-test .form-group input[type="text"],
+    .you-trust-test .form-group input[type="email"],
+    .you-trust-test .form-group input[type="tel"],
+    .you-trust-test .form-group input[type="number"],
+    .you-trust-test .form-group textarea,
+    .you-trust-test .form-group select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+        box-sizing: border-box;
+    }
+    .you-trust-test .form-group textarea {
+        min-height: 100px;
+        resize: vertical;
+    }
+    .you-trust-test .form-group input[type="file"] {
+        padding: 5px;
+    }
+    .you-trust-test .form-group input[type="checkbox"] {
+        width: auto;
+        margin-right: 10px;
+    }
+    .you-trust-test .btn {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s;
+    }
+    .you-trust-test .btn-primary {
+        background: #3498db;
+        color: white;
+    }
+    .you-trust-test .btn-primary:hover {
+        background: #2980b9;
+    }
+    .you-trust-test .btn-secondary {
+        background: #95a5a6;
+        color: white;
+    }
+    .you-trust-test .btn-danger {
+        background: #e74c3c;
+        color: white;
+    }
+    .you-trust-test .btn-success {
+        background: #27ae60;
+        color: white;
+    }
+    .you-trust-test .signer-box {
+        background: white;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        border: 1px solid #eee;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .you-trust-test .signer-box h3 {
+        margin-top: 0;
+        color: #3498db;
+        font-size: 18px;
+    }
+    .you-trust-test .signer-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+    .you-trust-test .signer-index {
+        background: #3498db;
+        color: white;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+    }
+    .you-trust-test .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+    .you-trust-test .grid-4 {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+    }
+    .you-trust-test .alert {
+        padding: 15px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+    }
+    .you-trust-test .alert-success {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+    .you-trust-test .alert-error {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+    .you-trust-test .alert-info {
+        background: #d1ecf1;
+        color: #0c5460;
+        border: 1px solid #bee5eb;
+    }
+    .you-trust-test .alert-warning {
+        background: #fff3cd;
+        color: #856404;
+        border: 1px solid #ffeeba;
+    }
+    .you-trust-test .required:after {
+        content: " *";
+        color: #e74c3c;
+    }
+    .you-trust-test nav.test-nav {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+    }
+    .you-trust-test nav.test-nav a {
+        padding: 10px 15px;
+        background: #ecf0f1;
+        color: #2c3e50;
+        text-decoration: none;
+        border-radius: 4px;
+        transition: background 0.3s;
+    }
+    .you-trust-test nav.test-nav a:hover {
+        background: #bdc3c7;
+    }
+    @media (max-width: 768px) {
+        .you-trust-test .grid-2 {
+            grid-template-columns: 1fr;
+        }
+        .you-trust-test .grid-4 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="you-trust-test">
+    <h1>📋 YouTrust Test - Signature Request Creator</h1>
+
+    <nav class="test-nav">
+        <a href="{{ path('test_you_trust_index') }}">🏠 Create Request</a>
+        <a href="{{ path('test_you_trust_list') }}">📊 List Requests</a>
+        <a href="{{ path('test_you_trust_ping') }}">🏓 Ping API</a>
+        <a href="{{ path('test_you_trust_upload_test') }}">📁 Upload Test</a>
+    </nav>
+
+    {% for type, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ type }}">{{ message|raw }}</div>
+        {% endfor %}
+    {% endfor %}
+
+    {% if not isConfigured %}
+        <div class="alert alert-error">
+            ⚠️ YouTrust API is not configured. Please set <code>YOU_TRUST_API_KEY</code> in your .env file.
+        </div>
+    {% endif %}
+
+    <form action="{{ path('test_you_trust_create_signature_request') }}" method="post" enctype="multipart/form-data">
+        {# General Configuration Section #}
+        <div class="card">
+            <h2>📝 General Signature Request Information</h2>
+            <p class="alert alert-info">All fields with * are required.</p>
+            
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="name" class="required">Name</label>
+                    <input type="text" id="name" name="name" value="Convention de stage - {{ 'now'|date('Y-m-d H:i') }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="external_id">External ID</label>
+                    <input type="text" id="external_id" name="external_id" value="conv_{{ 'now'|date('YmdHis') }}" placeholder="Optional external reference">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="custom_name" class="required">Sender Name (Custom)</label>
+                <input type="text" id="custom_name" name="custom_name" value="Lycée Gabriel Fauré" required>
+            </div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="request_subject" class="required">Email Subject</label>
+                    <input type="text" id="request_subject" name="request_subject" 
+                           value="Convention de stage de xxxx à signer" required>
+                </div>
+                <div class="form-group">
+                    <label for="reminder_subject" class="required">Reminder Subject</label>
+                    <input type="text" id="reminder_subject" name="reminder_subject" 
+                           value="[Rappel]: Convention de stage de xxxx à signer" required>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="request_body" class="required">Email Body</label>
+                    <textarea id="request_body" name="request_body" required>Merci d'accueillir tel étudiant et de signer sa convention de stage</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="reminder_body" class="required">Reminder Body</label>
+                    <textarea id="reminder_body" name="reminder_body" required>Vous n'avez pas eu le temps de signer?</textarea>
+                </div>
+            </div>
+
+            <div class="grid-4">
+                <div class="form-group">
+                    <label for="timezone">Timezone</label>
+                    <select id="timezone" name="timezone">
+                        <option value="Europe/Paris" selected>Europe/Paris</option>
+                        <option value="UTC">UTC</option>
+                        <option value="Europe/London">Europe/London</option>
+                        <option value="America/New_York">America/New_York</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="audit_trail_locale">Audit Trail Locale</label>
+                    <select id="audit_trail_locale" name="audit_trail_locale">
+                        <option value="fr" selected>Français (fr)</option>
+                        <option value="en">English (en)</option>
+                        <option value="es">Español (es)</option>
+                        <option value="de">Deutsch (de)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="delivery_mode">Delivery Mode</label>
+                    <select id="delivery_mode" name="delivery_mode">
+                        <option value="email" selected>Email</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="smart_anchors_resolution">Smart Anchors Resolution</label>
+                    <select id="smart_anchors_resolution" name="smart_anchors_resolution">
+                        <option value="on_activation" selected>On Activation</option>
+                        <option value="on_upload">On Upload</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid-4">
+                <div class="form-group">
+                    <label for="reminder_interval_in_days">Reminder Interval (days)</label>
+                    <input type="number" id="reminder_interval_in_days" name="reminder_interval_in_days" value="1" min="1" max="30">
+                </div>
+                <div class="form-group">
+                    <label for="max_reminder_occurrences">Max Reminders</label>
+                    <input type="number" id="max_reminder_occurrences" name="max_reminder_occurrences" value="5" min="1" max="20">
+                </div>
+                <div class="form-group">
+                    <label for="ordered_signers">
+                        <input type="checkbox" id="ordered_signers" name="ordered_signers" value="1" checked>
+                        Ordered Signers
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label for="signers_allowed_to_decline">
+                        <input type="checkbox" id="signers_allowed_to_decline" name="signers_allowed_to_decline" value="1">
+                        Allow Decline
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        {# Document Upload Section #}
+        <div class="card">
+            <h2>📄 Document Upload</h2>
+            <p class="alert alert-info">Upload a PDF document to be signed.</p>
+            
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="document" class="required">PDF Document</label>
+                    <input type="file" id="document" name="document" accept=".pdf" required>
+                    <small>Only PDF files are accepted</small>
+                </div>
+                <div class="form-group">
+                    <label for="parse_anchors">
+                        <input type="checkbox" id="parse_anchors" name="parse_anchors" value="1" checked>
+                        Parse Anchors
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        {# Signers Section #}
+        <div class="card">
+            <h2>👥 Signers ({{ defaultSigners|length }})</h2>
+            <p class="alert alert-info">Add at least one signer. All fields for each signer are required.</p>
+
+            <input type="hidden" name="signer_count" value="{{ defaultSigners|length }}" id="signer_count">
+            
+            <div id="signers_container">
+                {% for i, signer in defaultSigners %}
+                    {% include 'you_trust_test/_signer_row.html.twig' with {
+                        'index': i,
+                        'signer': signer
+                    } %}
+                {% endfor %}
+            </div>
+
+            <button type="button" onclick="addSigner()" class="btn btn-secondary" style="margin-top: 10px;">
+                + Add Another Signer
+            </button>
+        </div>
+
+        {# Submission Options #}
+        <div class="card">
+            <h2>⚡ Submission Options</h2>
+            
+            <div class="form-group">
+                <label for="activate_immediately">
+                    <input type="checkbox" id="activate_immediately" name="activate_immediately" value="1" checked>
+                    Activate Signature Request Immediately
+                </label>
+                <p style="margin-top: 10px; color: #7f8c8d;">
+                    If checked, the signature request will be activated right after creation.
+                    If unchecked, you'll need to manually activate it later.
+                </p>
+            </div>
+        </div>
+
+        <div class="card" style="text-align: center;">
+            <button type="submit" class="btn btn-primary btn-lg" style="font-size: 18px; padding: 15px 30px;">
+                🚀 Create Signature Request
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+    let signerCount = {{ defaultSigners|length }};
+
+    function addSigner() {
+        const container = document.getElementById('signers_container');
+        const template = `
+            <div class="signer-box" id="signer_box_${signerCount}">
+                <div class="signer-header">
+                    <span class="signer-index">${signerCount + 1}</span>
+                    <h3>Signer ${signerCount + 1}</h3>
+                    <button type="button" onclick="removeSigner(${signerCount})" 
+                            style="background: none; border: none; color: #e74c3c; cursor: pointer; font-size: 20px;">
+                        ×
+                    </button>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>First Name *</label>
+                        <input type="text" name="signer_${signerCount}_first_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name *</label>
+                        <input type="text" name="signer_${signerCount}_last_name" required>
+                    </div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Email *</label>
+                        <input type="email" name="signer_${signerCount}_email" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number *</label>
+                        <input type="tel" name="signer_${signerCount}_phone_number" 
+                               placeholder="+33612345678" required>
+                    </div>
+                </div>
+                <div class="grid-4">
+                    <div class="form-group">
+                        <label>Locale</label>
+                        <select name="signer_${signerCount}_locale">
+                            <option value="fr" selected>Français</option>
+                            <option value="en">English</option>
+                            <option value="es">Español</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Signature Level</label>
+                        <select name="signer_${signerCount}_signature_level">
+                            <option value="electronic_signature" selected>Electronic</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Delivery Mode</label>
+                        <select name="signer_${signerCount}_delivery_mode">
+                            <option value="email" selected>Email</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Auth Mode</label>
+                        <select name="signer_${signerCount}_signature_authentication_mode">
+                            <option value="otp_sms" selected>OTP SMS</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        `;
+        container.insertAdjacentHTML('beforeend', template);
+        document.getElementById('signer_count').value = signerCount + 1;
+        signerCount++;
+    }
+
+    function removeSigner(index) {
+        if (signerCount <= 1) {
+            alert('At least one signer is required');
+            return;
+        }
+        const box = document.getElementById('signer_box_' + index);
+        if (box) {
+            box.remove();
+            // Renumber remaining signers
+            const boxes = document.querySelectorAll('.signer-box');
+            boxes.forEach((box, i) => {
+                const newIndex = parseInt(box.id.replace('signer_box_', ''));
+                if (newIndex > index) {
+                    // Update all field names
+                    const inputs = box.querySelectorAll('input, select');
+                    inputs.forEach(input => {
+                        const name = input.name;
+                        const newName = name.replace('signer_' + newIndex, 'signer_' + i);
+                        input.name = newName;
+                    });
+                    box.id = 'signer_box_' + i;
+                    box.querySelector('.signer-index').textContent = i + 1;
+                }
+            });
+            document.getElementById('signer_count').value = signerCount - 1;
+            signerCount--;
+        }
+    }
+</script>
+{% endblock %}

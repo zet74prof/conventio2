@@ -21,3 +21,11 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    # YouTrust Service Configuration
+    App\Dto\YouTrustConfig:
+        arguments:
+            $apiUrl: '%env(YOU_TRUST_API_URL)%'
+            $apiKey: '%env(YOU_TRUST_API_KEY)%'
+            $apiVersion: '%env(YOU_TRUST_API_VERSION)%'
+            $timeout: '%env(YOU_TRUST_TIMEOUT)%'

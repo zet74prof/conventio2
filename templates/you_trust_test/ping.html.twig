@@ -1,0 +1,216 @@
+{# templates/you_trust_test/ping.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Ping API - YouTrust Test{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    .you-trust-test {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+    }
+    .you-trust-test h1 {
+        color: #2c3e50;
+        border-bottom: 2px solid #f39c12;
+        padding-bottom: 10px;
+    }
+    .you-trust-test .card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    .you-trust-test .card h2 {
+        color: #f39c12;
+        margin-top: 0;
+    }
+    .you-trust-test nav.test-nav {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+    }
+    .you-trust-test nav.test-nav a {
+        padding: 10px 15px;
+        background: #ecf0f1;
+        color: #2c3e50;
+        text-decoration: none;
+        border-radius: 4px;
+        transition: background 0.3s;
+    }
+    .you-trust-test nav.test-nav a:hover {
+        background: #bdc3c7;
+    }
+    .you-trust-test .alert {
+        padding: 15px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+    }
+    .you-trust-test .alert-success {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+    .you-trust-test .alert-error {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+    .you-trust-test .alert-warning {
+        background: #fff3cd;
+        color: #856404;
+        border: 1px solid #ffeeba;
+    }
+    .you-trust-test .data-grid {
+        display: grid;
+        gap: 15px;
+        margin: 20px 0;
+    }
+    .you-trust-test .data-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 12px;
+        background: #f8f9fa;
+        border-radius: 4px;
+        border-left: 4px solid #f39c12;
+    }
+    .you-trust-test .data-item .label {
+        font-weight: bold;
+        color: #2c3e50;
+    }
+    .you-trust-test .data-item .value {
+        color: #7f8c8d;
+        font-family: monospace;
+    }
+    .you-trust-test .status-badge {
+        display: inline-block;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: bold;
+    }
+    .you-trust-test .status-online {
+        background: #27ae60;
+        color: white;
+    }
+    .you-trust-test .status-offline {
+        background: #e74c3c;
+        color: white;
+    }
+    .you-trust-test .status-warning {
+        background: #f39c12;
+        color: white;
+    }
+    .you-trust-test .code-block {
+        background: #2d2d2d;
+        color: #f8f8f2;
+        padding: 15px;
+        border-radius: 4px;
+        overflow-x: auto;
+        font-family: monospace;
+        font-size: 13px;
+        white-space: pre-wrap;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="you-trust-test">
+    <h1>🏓 API Connectivity Test</h1>
+
+    <nav class="test-nav">
+        <a href="{{ path('test_you_trust_index') }}">🏠 Create Request</a>
+        <a href="{{ path('test_you_trust_list') }}">📊 List Requests</a>
+        <a href="{{ path('test_you_trust_ping') }}">🏓 Ping API</a>
+        <a href="{{ path('test_you_trust_upload_test') }}">📁 Upload Test</a>
+    </nav>
+
+    {% if error is defined %}
+        <div class="alert alert-error">
+            ❌ Connection failed: {{ error }}
+        </div>
+    {% endif %}
+
+    <div class="card">
+        <h2>📊 YouTrust API Configuration</h2>
+
+        <div class="data-grid">
+            <div class="data-item">
+                <span class="label">API URL:</span>
+                <span class="value">{{ config.apiUrl|default('Not configured') }}</span>
+            </div>
+            <div class="data-item">
+                <span class="label">API Version:</span>
+                <span class="value">{{ config.apiVersion|default('Not configured') }}</span>
+            </div>
+            <div class="data-item">
+                <span class="label">API Key:</span>
+                <span class="value">
+                    {% if config.apiKey and config.apiKey|length > 0 %}
+                        ✅ Configured (hidden for security)
+                    {% else %}
+                        ❌ Not configured
+                    {% endif %}
+                </span>
+            </div>
+            <div class="data-item">
+                <span class="label">Timeout:</span>
+                <span class="value">{{ config.timeout|default('30') }} seconds</span>
+            </div>
+        </div>
+
+        <div style="margin-top: 20px;">
+            {% if isConfigured %}
+                <span class="status-badge status-online">✅ Online - API is configured</span>
+            {% else %}
+                <span class="status-badge status-offline">❌ Offline - API is not configured</span>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>🔧 Configuration Instructions</h2>
+
+        <p>To configure the YouTrust API service, add the following to your <code>.env</code> file:</p>
+
+        <div class="code-block"># YouTrust API Configuration
+YOU_TRUST_API_URL=https://api-sandbox.yousign.app
+YOU_TRUST_API_KEY=your_api_key_here
+YOU_TRUST_API_VERSION=v3
+YOU_TRUST_TIMEOUT=30</div>
+
+        <p style="margin-top: 20px;">
+            <strong>Note:</strong> For production, use the production API URL: 
+            <code>https://api.yousign.app</code> and your production API key.
+        </p>
+    </div>
+
+    <div class="card">
+        <h2>💡 Tips</h2>
+        <ul style="padding-left: 20px; line-height: 1.8;">
+            <li>Make sure you have a valid YouTrust (YouSign) account</li>
+            <li>Generate your API key from the YouTrust dashboard</li>
+            <li>Use sandbox environment for testing: <code>https://api-sandbox.yousign.app</code></li>
+            <li>After configuring, clear the Symfony cache: <code>php bin/console cache:clear</code></li>
+            <li>Test the connection by refreshing this page</li>
+        </ul>
+    </div>
+
+    <div class="card" style="text-align: center;">
+        <a href="{{ path('test_you_trust_index') }}" class="btn btn-primary" style="
+            display: inline-block;
+            padding: 12px 24px;
+            background: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            cursor: pointer;
+        ">
+            ← Back to Test Form
+        </a>
+    </div>
+</div>
+{% endblock %}
