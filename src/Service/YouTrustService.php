@@ -412,25 +412,9 @@ class YouTrustService
         // Step 2: Upload the document
         $response = $this->uploadDocument($signatureRequestId, $document);
 
-        // Step 3: Add all signers
-        foreach ($signers as $index => $signer) {
-            // Set signing order if ordered signers is enabled
-            if ($signatureConfig->orderedSigners && null === $signer->signingOrder) {
-                $signerWithOrder = new SignerInfo(
-                    firstName: $signer->firstName,
-                    lastName: $signer->lastName,
-                    email: $signer->email,
-                    phoneNumber: $signer->phoneNumber,
-                    locale: $signer->locale,
-                    signatureLevel: $signer->signatureLevel,
-                    deliveryMode: $signer->deliveryMode,
-                    signatureAuthenticationMode: $signer->signatureAuthenticationMode,
-                    signingOrder: $index + 1,
-                );
-                $this->createSigner($signatureRequestId, $signerWithOrder);
-            } else {
-                $this->createSigner($signatureRequestId, $signer);
-            }
+        // Step 3: Add all signers (signing order is handled by ordered_signers on the signature request)
+        foreach ($signers as $signer) {
+            $this->createSigner($signatureRequestId, $signer);
         }
 
         // Step 4: Activate the signature request if requested
@@ -479,24 +463,9 @@ class YouTrustService
             $mimeType
         );
 
-        // Step 3: Add all signers
-        foreach ($signers as $index => $signer) {
-            if ($signatureConfig->orderedSigners && null === $signer->signingOrder) {
-                $signerWithOrder = new SignerInfo(
-                    firstName: $signer->firstName,
-                    lastName: $signer->lastName,
-                    email: $signer->email,
-                    phoneNumber: $signer->phoneNumber,
-                    locale: $signer->locale,
-                    signatureLevel: $signer->signatureLevel,
-                    deliveryMode: $signer->deliveryMode,
-                    signatureAuthenticationMode: $signer->signatureAuthenticationMode,
-                    signingOrder: $index + 1,
-                );
-                $this->createSigner($signatureRequestId, $signerWithOrder);
-            } else {
-                $this->createSigner($signatureRequestId, $signer);
-            }
+        // Step 3: Add all signers (signing order is handled by ordered_signers on the signature request)
+        foreach ($signers as $signer) {
+            $this->createSigner($signatureRequestId, $signer);
         }
 
         // Step 4: Activate if requested
@@ -516,7 +485,7 @@ class YouTrustService
      *
      * @param string $method HTTP method (GET, POST, PUT, DELETE, etc.)
      * @param string $url Full URL for the request
-     * @param array|null $body Request body
+     * @param array|null $body Request body (sent as JSON)
      * @param array $options Additional options for the HTTP client
      * @return ResponseInterface The HTTP response
      */
@@ -535,7 +504,8 @@ class YouTrustService
         ];
 
         if (null !== $body) {
-            $defaultOptions['body'] = $body;
+            $defaultOptions['headers']['Content-Type'] = 'application/json';
+            $defaultOptions['body'] = json_encode($body);
         }
 
         // Merge custom headers into default headers (preserving Authorization)

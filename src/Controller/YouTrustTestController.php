@@ -171,7 +171,6 @@ class YouTrustTestController extends AbstractController
                     signatureLevel: $request->request->get($prefix . 'signature_level', 'electronic_signature'),
                     deliveryMode: $request->request->get($prefix . 'delivery_mode', 'email'),
                     signatureAuthenticationMode: $request->request->get($prefix . 'signature_authentication_mode', 'otp_sms'),
-                    signingOrder: $orderedSigners ? ($i + 1) : null,
                 );
             }
 

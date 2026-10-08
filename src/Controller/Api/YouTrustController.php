@@ -406,7 +406,6 @@ class YouTrustController extends AbstractController
                 signatureLevel: $data['signature_level'] ?? 'electronic_signature',
                 deliveryMode: $data['delivery_mode'] ?? 'email',
                 signatureAuthenticationMode: $data['signature_authentication_mode'] ?? 'otp_sms',
-                signingOrder: $data['signing_order'] ?? null,
             );
 
             $result = $this->youTrustService->createSigner($signatureRequestId, $signer);
@@ -586,7 +585,6 @@ class YouTrustController extends AbstractController
                     signatureLevel: $signerData['signature_level'] ?? 'electronic_signature',
                     deliveryMode: $signerData['delivery_mode'] ?? 'email',
                     signatureAuthenticationMode: $signerData['signature_authentication_mode'] ?? 'otp_sms',
-                    signingOrder: $signerData['signing_order'] ?? null,
                 );
             }
 

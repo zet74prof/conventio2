@@ -102,8 +102,7 @@ class YouTrustServiceTest extends KernelTestCase
             firstName: 'John',
             lastName: 'Doe',
             email: 'john@example.com',
-            phoneNumber: '+33612345678',
-            signingOrder: 1
+            phoneNumber: '+33612345678'
         );
 
         $array = $signer->toArray();
@@ -112,24 +111,9 @@ class YouTrustServiceTest extends KernelTestCase
         $this->assertEquals('Doe', $array['info']['last_name']);
         $this->assertEquals('john@example.com', $array['info']['email']);
         $this->assertEquals('+33612345678', $array['info']['phone_number']);
-        $this->assertEquals(1, $array['info']['signing_order']);
+        $this->assertArrayNotHasKey('signing_order', $array['info']);
         $this->assertEquals('electronic_signature', $array['signature_level']);
         $this->assertEquals('otp_sms', $array['signature_authentication_mode']);
-    }
-
-    public function testSignerInfoToArrayWithoutOrder(): void
-    {
-        $signer = new SignerInfo(
-            firstName: 'Jane',
-            lastName: 'Smith',
-            email: 'jane@example.com',
-            phoneNumber: '+33687654321',
-            signingOrder: null
-        );
-
-        $array = $signer->toArray();
-
-        $this->assertArrayNotHasKey('signing_order', $array['info']);
     }
 
     // ========================================================================

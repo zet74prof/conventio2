@@ -16,7 +16,6 @@ readonly class SignerInfo
      * @param string $signatureLevel Signature level (default: 'electronic_signature')
      * @param string $deliveryMode Delivery mode (default: 'email')
      * @param string $signatureAuthenticationMode Authentication mode (default: 'otp_sms')
-     * @param int $signingOrder Order in which the signer should sign (null = no specific order)
      */
     public function __construct(
         public string $firstName,
@@ -27,7 +26,6 @@ readonly class SignerInfo
         public string $signatureLevel = 'electronic_signature',
         public string $deliveryMode = 'email',
         public string $signatureAuthenticationMode = 'otp_sms',
-        public ?int $signingOrder = null,
     ) {
     }
 
@@ -36,7 +34,7 @@ readonly class SignerInfo
      */
     public function toArray(): array
     {
-        $data = [
+        return [
             'info' => [
                 'first_name' => $this->firstName,
                 'last_name' => $this->lastName,
@@ -48,11 +46,5 @@ readonly class SignerInfo
             'delivery_mode' => $this->deliveryMode,
             'signature_authentication_mode' => $this->signatureAuthenticationMode,
         ];
-
-        if (null !== $this->signingOrder) {
-            $data['info']['signing_order'] = $this->signingOrder;
-        }
-
-        return $data;
     }
 }
