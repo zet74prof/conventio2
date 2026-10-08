@@ -145,6 +145,25 @@ class YouTrustService
         return $result['data'] ?? $result;
     }
 
+    /**
+     * Delete a Signature Request.
+     * Only possible when the Signature Request is not in approval or ongoing status.
+     *
+     * @param string $signatureRequestId ID of the signature request to delete
+     * @return array Normalized response
+     * @throws YouTrustApiException When API request fails
+     */
+    public function deleteSignatureRequest(string $signatureRequestId): array
+    {
+        $url = $this->config->getBaseUrl() . '/signature_requests/' . $signatureRequestId;
+
+        $response = $this->request('DELETE', $url);
+        $result = $this->handleResponse($response);
+
+        // YouTrust returns data in a 'data' field
+        return $result['data'] ?? $result;
+    }
+
     // ========================================================================
     // Document Methods
     // ========================================================================

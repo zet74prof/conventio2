@@ -199,6 +199,30 @@ class YouTrustController extends AbstractController
         }
     }
 
+    /**
+     * Delete a signature request.
+     * Only possible when the signature request is not in approval or ongoing status.
+     *
+     * DELETE /api/you-trust/signature-requests/{signatureRequestId}
+     */
+    #[Route('/signature-requests/{signatureRequestId}', name: 'delete_signature_request', methods: ['DELETE'])]
+    public function deleteSignatureRequest(string $signatureRequestId): JsonResponse
+    {
+        try {
+            $result = $this->youTrustService->deleteSignatureRequest($signatureRequestId);
+
+            return $this->json([
+                'success' => true,
+                'result' => $result,
+            ]);
+        } catch (\Exception $e) {
+            return $this->json([
+                'success' => false,
+                'error' => $e->getMessage(),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
     // ========================================================================
     // Document Endpoints
     // ========================================================================
