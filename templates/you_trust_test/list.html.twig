@@ -220,6 +220,12 @@
         <a href="{{ path('test_you_trust_upload_test') }}">📁 Upload Test</a>
     </nav>
 
+    {% for type, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ type }}">{{ message|raw }}</div>
+        {% endfor %}
+    {% endfor %}
+
     <div class="card">
         <h2>🔍 All Signature Requests</h2>
 
@@ -338,12 +344,19 @@
                             <a href="{{ path('api_you_trust_get_signature_request', {'signatureRequestId': sr.id}) }}" 
                                class="btn btn-info" title="View">👁️</a>
                             {% if sr.status == 'draft' %}
-                                <a href="{{ path('api_you_trust_activate_signature_request', {'signatureRequestId': sr.id}) }}" 
-                                   class="btn btn-success" title="Activate">✅</a>
+                                <form method="post" action="{{ path('test_you_trust_activate_signature_request', {'signatureRequestId': sr.id}) }}" style="display: inline;">
+                                    <button type="submit" class="btn btn-success" title="Activate">✅</button>
+                                </form>
                             {% endif %}
-                            {% if sr.status != 'cancelled' and sr.status != 'completed' %}
-                                <a href="{{ path('api_you_trust_cancel_signature_request', {'signatureRequestId': sr.id}) }}" 
-                                   class="btn btn-danger" title="Cancel" onclick="return confirm('Are you sure?')">❌</a>
+                            {% if sr.status == 'approval' or sr.status == 'ongoing' %}
+                                <form method="post" action="{{ path('test_you_trust_cancel_signature_request', {'signatureRequestId': sr.id}) }}" style="display: inline;" onsubmit="return confirm('Cancel this signature request? It cannot be reactivated.')">
+                                    <button type="submit" class="btn btn-danger" title="Cancel">❌</button>
+                                </form>
+                            {% endif %}
+                            {% if sr.status != 'approval' and sr.status != 'ongoing' %}
+                                <form method="post" action="{{ path('test_you_trust_delete_signature_request', {'signatureRequestId': sr.id}) }}" style="display: inline;" onsubmit="return confirm('Delete this signature request? This cannot be undone.')">
+                                    <button type="submit" class="btn btn-danger" title="Delete" style="background: #6c757d;">🗑️</button>
+                                </form>
                             {% endif %}
                         </td>
                     </tr>

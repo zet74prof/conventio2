@@ -323,6 +323,60 @@ class YouTrustTestController extends AbstractController
     }
 
     /**
+     * Activate a signature request from the test list page.
+     */
+    #[Route('/activate/{signatureRequestId}', name: 'activate_signature_request', methods: ['POST'])]
+    public function activateSignatureRequest(string $signatureRequestId): Response
+    {
+        try {
+            $this->youTrustService->activateSignatureRequest($signatureRequestId);
+            $this->addFlash('success', sprintf('Signature request %s activated', $signatureRequestId));
+        } catch (YouTrustApiException $e) {
+            $this->addFlash('error', $e->getMessage());
+        } catch (\Exception $e) {
+            $this->addFlash('error', $e->getMessage());
+        }
+
+        return $this->redirectToRoute('test_you_trust_list');
+    }
+
+    /**
+     * Cancel a signature request from the test list page.
+     */
+    #[Route('/cancel/{signatureRequestId}', name: 'cancel_signature_request', methods: ['POST'])]
+    public function cancelSignatureRequest(string $signatureRequestId): Response
+    {
+        try {
+            $this->youTrustService->cancelSignatureRequest($signatureRequestId);
+            $this->addFlash('success', sprintf('Signature request %s cancelled', $signatureRequestId));
+        } catch (YouTrustApiException $e) {
+            $this->addFlash('error', $e->getMessage());
+        } catch (\Exception $e) {
+            $this->addFlash('error', $e->getMessage());
+        }
+
+        return $this->redirectToRoute('test_you_trust_list');
+    }
+
+    /**
+     * Delete a signature request from the test list page.
+     */
+    #[Route('/delete/{signatureRequestId}', name: 'delete_signature_request', methods: ['POST'])]
+    public function deleteSignatureRequest(string $signatureRequestId): Response
+    {
+        try {
+            $this->youTrustService->deleteSignatureRequest($signatureRequestId);
+            $this->addFlash('success', sprintf('Signature request %s deleted', $signatureRequestId));
+        } catch (YouTrustApiException $e) {
+            $this->addFlash('error', $e->getMessage());
+        } catch (\Exception $e) {
+            $this->addFlash('error', $e->getMessage());
+        }
+
+        return $this->redirectToRoute('test_you_trust_list');
+    }
+
+    /**
      * Helper function to format bytes.
      */
     private function formatBytes(int $bytes): string

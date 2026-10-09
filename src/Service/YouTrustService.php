@@ -106,20 +106,15 @@ class YouTrustService
      * Handles YouTrust response structure: {meta: {...}, data: {...}}
      *
      * @param string $signatureRequestId ID of the signature request to cancel
-     * @param string|null $reason Optional reason for cancellation
+     * @param string $reason Reason for cancellation (contractualization_aborted, errors_in_document, other)
      * @return array Normalized response
      * @throws YouTrustApiException When API request fails
      */
-    public function cancelSignatureRequest(string $signatureRequestId, ?string $reason = null): array
+    public function cancelSignatureRequest(string $signatureRequestId, string $reason = 'contractualization_aborted'): array
     {
         $url = $this->config->getBaseUrl() . '/signature_requests/' . $signatureRequestId . '/cancel';
 
-        $body = [];
-        if (null !== $reason) {
-            $body['reason'] = $reason;
-        }
-
-        $response = $this->request('POST', $url, $body);
+        $response = $this->request('POST', $url, ['reason' => $reason]);
         $result = $this->handleResponse($response);
 
         // YouTrust returns data in a 'data' field
@@ -139,6 +134,25 @@ class YouTrustService
         $url = $this->config->getBaseUrl() . '/signature_requests/' . $signatureRequestId . '/activate';
 
         $response = $this->request('POST', $url);
+        $result = $this->handleResponse($response);
+
+        // YouTrust returns data in a 'data' field
+        return $result['data'] ?? $result;
+    }
+
+    /**
+     * Delete a Signature Request.
+     * Only possible when the Signature Request is not in approval or ongoing status.
+     *
+     * @param string $signatureRequestId ID of the signature request to delete
+     * @return array Normalized response
+     * @throws YouTrustApiException When API request fails
+     */
+    public function deleteSignatureRequest(string $signatureRequestId): array
+    {
+        $url = $this->config->getBaseUrl() . '/signature_requests/' . $signatureRequestId;
+
+        $response = $this->request('DELETE', $url);
         $result = $this->handleResponse($response);
 
         // YouTrust returns data in a 'data' field

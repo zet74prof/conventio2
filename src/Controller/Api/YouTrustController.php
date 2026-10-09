@@ -154,13 +154,15 @@ class YouTrustController extends AbstractController
      * Cancel a signature request.
      *
      * POST /api/you-trust/signature-requests/{signatureRequestId}/cancel
+     *
+     * Body: { "reason": "contractualization_aborted" | "errors_in_document" | "other" }
      */
     #[Route('/signature-requests/{signatureRequestId}/cancel', name: 'cancel_signature_request', methods: ['POST'])]
     public function cancelSignatureRequest(string $signatureRequestId, Request $request): JsonResponse
     {
         try {
             $data = json_decode($request->getContent(), true);
-            $reason = $data['reason'] ?? null;
+            $reason = $data['reason'] ?? 'contractualization_aborted';
 
             $result = $this->youTrustService->cancelSignatureRequest($signatureRequestId, $reason);
 
@@ -186,6 +188,30 @@ class YouTrustController extends AbstractController
     {
         try {
             $result = $this->youTrustService->activateSignatureRequest($signatureRequestId);
+
+            return $this->json([
+                'success' => true,
+                'result' => $result,
+            ]);
+        } catch (\Exception $e) {
+            return $this->json([
+                'success' => false,
+                'error' => $e->getMessage(),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    /**
+     * Delete a signature request.
+     * Only possible when the signature request is not in approval or ongoing status.
+     *
+     * DELETE /api/you-trust/signature-requests/{signatureRequestId}
+     */
+    #[Route('/signature-requests/{signatureRequestId}', name: 'delete_signature_request', methods: ['DELETE'])]
+    public function deleteSignatureRequest(string $signatureRequestId): JsonResponse
+    {
+        try {
+            $result = $this->youTrustService->deleteSignatureRequest($signatureRequestId);
 
             return $this->json([
                 'success' => true,

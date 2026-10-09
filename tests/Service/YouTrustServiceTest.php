@@ -241,9 +241,45 @@ class YouTrustServiceTest extends KernelTestCase
 
         $this->httpClientMock
             ->method('request')
+            ->with(
+                'POST',
+                'https://api-sandbox.yousign.app/v3/signature_requests/sr-123/cancel',
+                $this->callback(function ($options) {
+                    $body = json_decode($options['body'], true);
+
+                    return isset($body['reason']) && 'other' === $body['reason'];
+                })
+            )
             ->willReturn($responseMock);
 
-        $result = $this->service->cancelSignatureRequest('sr-123', 'Test reason');
+        $result = $this->service->cancelSignatureRequest('sr-123', 'other');
+
+        $this->assertEquals('cancelled', $result['status']);
+    }
+
+    public function testCancelSignatureRequestDefaultReason(): void
+    {
+        $responseMock = $this->createMock(ResponseInterface::class);
+        $responseMock->method('getStatusCode')->willReturn(200);
+        $responseMock->method('getContent')->willReturn(json_encode([
+            'id' => 'sr-123',
+            'status' => 'cancelled',
+        ]));
+
+        $this->httpClientMock
+            ->method('request')
+            ->with(
+                'POST',
+                'https://api-sandbox.yousign.app/v3/signature_requests/sr-123/cancel',
+                $this->callback(function ($options) {
+                    $body = json_decode($options['body'], true);
+
+                    return isset($body['reason']) && 'contractualization_aborted' === $body['reason'];
+                })
+            )
+            ->willReturn($responseMock);
+
+        $result = $this->service->cancelSignatureRequest('sr-123');
 
         $this->assertEquals('cancelled', $result['status']);
     }
@@ -264,6 +300,40 @@ class YouTrustServiceTest extends KernelTestCase
         $result = $this->service->activateSignatureRequest('sr-123');
 
         $this->assertEquals('activated', $result['status']);
+    }
+
+    public function testDeleteSignatureRequestSuccess(): void
+    {
+        $responseMock = $this->createMock(ResponseInterface::class);
+        $responseMock->method('getStatusCode')->willReturn(204);
+        $responseMock->method('getContent')->willReturn('');
+
+        $this->httpClientMock
+            ->method('request')
+            ->with('DELETE', 'https://api-sandbox.yousign.app/v3/signature_requests/sr-123')
+            ->willReturn($responseMock);
+
+        $result = $this->service->deleteSignatureRequest('sr-123');
+
+        $this->assertEquals([], $result);
+    }
+
+    public function testDeleteSignatureRequestFailure(): void
+    {
+        $responseMock = $this->createMock(ResponseInterface::class);
+        $responseMock->method('getStatusCode')->willReturn(400);
+        $responseMock->method('getContent')->willReturn(json_encode([
+            'message' => 'Cannot delete an ongoing signature request',
+        ]));
+
+        $this->httpClientMock
+            ->method('request')
+            ->willReturn($responseMock);
+
+        $this->expectException(YouTrustApiException::class);
+        $this->expectExceptionMessageMatches('/YouTrust API Error \[400\]/');
+
+        $this->service->deleteSignatureRequest('sr-123');
     }
 
     public function testUploadDocumentBase64Success(): void
