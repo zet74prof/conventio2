@@ -241,9 +241,45 @@ class YouTrustServiceTest extends KernelTestCase
 
         $this->httpClientMock
             ->method('request')
+            ->with(
+                'POST',
+                'https://api-sandbox.yousign.app/v3/signature_requests/sr-123/cancel',
+                $this->callback(function ($options) {
+                    $body = json_decode($options['body'], true);
+
+                    return isset($body['reason']) && 'other' === $body['reason'];
+                })
+            )
             ->willReturn($responseMock);
 
-        $result = $this->service->cancelSignatureRequest('sr-123', 'Test reason');
+        $result = $this->service->cancelSignatureRequest('sr-123', 'other');
+
+        $this->assertEquals('cancelled', $result['status']);
+    }
+
+    public function testCancelSignatureRequestDefaultReason(): void
+    {
+        $responseMock = $this->createMock(ResponseInterface::class);
+        $responseMock->method('getStatusCode')->willReturn(200);
+        $responseMock->method('getContent')->willReturn(json_encode([
+            'id' => 'sr-123',
+            'status' => 'cancelled',
+        ]));
+
+        $this->httpClientMock
+            ->method('request')
+            ->with(
+                'POST',
+                'https://api-sandbox.yousign.app/v3/signature_requests/sr-123/cancel',
+                $this->callback(function ($options) {
+                    $body = json_decode($options['body'], true);
+
+                    return isset($body['reason']) && 'contractualization_aborted' === $body['reason'];
+                })
+            )
+            ->willReturn($responseMock);
+
+        $result = $this->service->cancelSignatureRequest('sr-123');
 
         $this->assertEquals('cancelled', $result['status']);
     }

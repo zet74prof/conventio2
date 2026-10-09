@@ -154,13 +154,15 @@ class YouTrustController extends AbstractController
      * Cancel a signature request.
      *
      * POST /api/you-trust/signature-requests/{signatureRequestId}/cancel
+     *
+     * Body: { "reason": "contractualization_aborted" | "errors_in_document" | "other" }
      */
     #[Route('/signature-requests/{signatureRequestId}/cancel', name: 'cancel_signature_request', methods: ['POST'])]
     public function cancelSignatureRequest(string $signatureRequestId, Request $request): JsonResponse
     {
         try {
             $data = json_decode($request->getContent(), true);
-            $reason = $data['reason'] ?? null;
+            $reason = $data['reason'] ?? 'contractualization_aborted';
 
             $result = $this->youTrustService->cancelSignatureRequest($signatureRequestId, $reason);
 
