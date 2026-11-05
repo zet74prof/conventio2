@@ -24,6 +24,78 @@ generate its config. Don't hand-edit `config/bundles.php` or hand-write a bundle
 base config; that's what the recipe is for. Don't skip a good-fit component just
 because it isn't installed yet; installing it is one command.
 
+## Frontend: Asset Mapper + Tailwind, no Node
+
+The frontend runs on the Asset Mapper component. There is no Node.js, no
+Vite, no Webpack Encore, and no bundler step: assets are served as native
+ES modules and versioned files. Don't add a JS build pipeline, and don't
+introduce npm dependencies as a default reflex.
+
+- CSS is Tailwind v4, integrated through `symfonycasts/tailwind-bundle`
+  (`composer require symfonycasts/tailwind-bundle`). The stylesheet lives in
+  `assets/styles/app.css` with `@import "tailwindcss";` and is built with
+  `bin/console tailwind:build` (or `--watch` during development). Import that
+  stylesheet from Twig, not the compiled output.
+- Style with Tailwind utilities in markup. Don't hand-write bespoke CSS when
+  a utility class would do, and don't reach for Bootstrap: this project
+  deliberately moved off it.
+- New frontend packages go through `bin/console importmap:require <package>`,
+  which wires the importmap versioning. Import them as ES modules in
+  `assets/app.js` or in the Stimulus controller that needs them. Prefer
+  packages that ship native ESM and need no build step.
+- Templates are Twig with Tailwind classes. Keep the markup semantic and
+  accessible (label/aria attributes, focus states).
+
+### Interactive widgets
+
+Tooltips, date pickers, floating labels, dropdowns, dialogs come from, in
+order of preference:
+
+1. Native platform features: `<dialog>`, `<details>`, the Popover API,
+   `light-dark()`. Use these before any library.
+2. A `symfony/ux-*` package when it covers the need well, especially anything
+   wired to Symfony's form component or rendering (`composer require` it
+   rather than hand-rolling or installing a lookalike library).
+3. A lightweight Tailwind-compatible library (Preline, Flowbite) or a minimal
+   one like flatpickr, wired through importmap.
+4. A small project-specific Stimulus controller.
+
+Avoid monolithic component frameworks (React, Vue) unless the task
+explicitly asks for them.
+
+## JavaScript: Stimulus + Turbo
+
+JavaScript behavior is written as Stimulus controllers, not as ad-hoc
+`<script>` blocks, global event listeners, or another framework (Alpine,
+jQuery). If `symfony/stimulus-bundle` isn't installed, `composer require` it
+rather than substituting a different approach.
+
+- One behavior = one controller in `assets/controllers/`, named
+  `name_controller.js`, attached with `data-controller="name"`.
+- Read state from `data-*-value` and `data-*-target` attributes instead of
+  DOM scraping or hidden globals; declare them with `static values = {}` /
+  `static targets = []`.
+- Third-party libraries are imported inside the controller that needs them
+  (via importmap), initialized in `connect()`, and cleaned up in
+  `disconnect()`. A library may complement a controller; it never replaces
+  one.
+- Turbo is enabled (`symfony/ux-turbo`). Write controllers to be idempotent
+  across Turbo navigations: assume `connect()` may run more than once per
+  page load, and release everything (listeners, timers, library instances)
+  in `disconnect()`.
+- Don't hand-roll behavior a `symfony/ux-*` package already provides;
+  `composer require` the package instead.
+
+## Frontend workflow
+
+- Rebuild CSS after touching Tailwind classes or templates if the watcher
+  isn't running: `bin/console tailwind:build`.
+- Check `bin/console debug:asset-map` when an asset 404s; an unmapped import
+  is the usual cause, not a missing file.
+- Frontend changes are done when they render correctly in the browser and
+  pass the existing test suite; add functional coverage for interactive
+  behavior where it matters.
+
 ## Conventions
 
 Follow https://symfony.com/doc/current/best_practices.html to write idiomatic
