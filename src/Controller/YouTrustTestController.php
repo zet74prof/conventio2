@@ -8,20 +8,10 @@ use App\Dto\SignerInfo;
 use App\Exception\YouTrustApiException;
 use App\Service\YouTrustService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\Form\Extension\Core\Type\FormType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TelType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Test controller for YouTrust API service.
@@ -32,7 +22,6 @@ class YouTrustTestController extends AbstractController
 {
     public function __construct(
         private YouTrustService $youTrustService,
-        private UrlGeneratorInterface $urlGenerator,
     ) {
     }
 
@@ -44,7 +33,7 @@ class YouTrustTestController extends AbstractController
     public function index(Request $request): Response
     {
         if (!$this->youTrustService->isConfigured()) {
-            $this->addFlash('error', 'YouTrust service is not configured. Please set YOU_TRUST_API_KEY in .env');
+            $this->addFlash('error', 'Le service YouTrust n\'est pas configuré. Définissez YOU_TRUST_API_KEY dans votre .env');
         }
 
         // Create default signer entries (3 signers as requested)
@@ -72,7 +61,6 @@ class YouTrustTestController extends AbstractController
         return $this->render('you_trust_test/index.html.twig', [
             'defaultSigners' => $defaultSigners,
             'isConfigured' => $this->youTrustService->isConfigured(),
-            'config' => $this->youTrustService->getConfig(),
         ]);
     }
 
@@ -84,7 +72,7 @@ class YouTrustTestController extends AbstractController
     public function createSignatureRequest(Request $request): Response
     {
         if (!$this->youTrustService->isConfigured()) {
-            $this->addFlash('error', 'YouTrust service is not configured. Please set YOU_TRUST_API_KEY in .env');
+            $this->addFlash('error', 'Le service YouTrust n\'est pas configuré. Définissez YOU_TRUST_API_KEY dans votre .env');
             return $this->redirectToRoute('test_you_trust_index');
         }
 
@@ -106,7 +94,7 @@ class YouTrustTestController extends AbstractController
             $documentFile = $request->files->get('document');
 
             if (!$documentFile || !$documentFile->isValid()) {
-                $this->addFlash('error', 'Please upload a valid PDF document');
+                $this->addFlash('error', 'Veuillez téléverser un document PDF valide');
                 return $this->redirectToRoute('test_you_trust_index');
             }
 
@@ -116,7 +104,7 @@ class YouTrustTestController extends AbstractController
 
             // Verify the file was moved successfully
             if (!$movedFile || !file_exists($tempPath)) {
-                $this->addFlash('error', 'Failed to save uploaded document');
+                $this->addFlash('error', 'Échec de l\'enregistrement du document téléversé');
                 return $this->redirectToRoute('test_you_trust_index');
             }
 
@@ -175,7 +163,7 @@ class YouTrustTestController extends AbstractController
             }
 
             if (empty($signers)) {
-                $this->addFlash('error', 'At least one signer is required');
+                $this->addFlash('error', 'Au moins un signataire est requis');
                 return $this->redirectToRoute('test_you_trust_index');
             }
 
@@ -204,7 +192,7 @@ class YouTrustTestController extends AbstractController
                 ],
             ]);
 
-            $this->addFlash('success', 'Signature request created successfully!');
+            $this->addFlash('success', 'Demande de signature créée avec succès !');
             return $this->redirectToRoute('test_you_trust_result');
 
         } catch (YouTrustApiException $e) {
@@ -230,7 +218,7 @@ class YouTrustTestController extends AbstractController
         $result = $request->getSession()->get('you_trust_last_result');
 
         if (!$result || !isset($result['success']) || !$result['success']) {
-            $this->addFlash('error', 'No result to display');
+            $this->addFlash('error', 'Aucun résultat à afficher');
             return $this->redirectToRoute('test_you_trust_index');
         }
 
@@ -261,12 +249,12 @@ class YouTrustTestController extends AbstractController
 
                 // Verify the file was moved successfully
                 if (!$movedFile || !file_exists($tempPath)) {
-                    $this->addFlash('error', 'Failed to save uploaded file');
+                    $this->addFlash('error', 'Échec de l\'enregistrement du fichier téléversé');
                 } else {
                     $this->addFlash('success', sprintf(
-                        'File uploaded successfully! Name: %s, Size: %s, MIME: %s',
+                        'Fichier téléversé avec succès ! Nom : %s, taille : %s, MIME : %s',
                         $fileName,
-                        format_bytes($fileSize),
+                        $this->formatBytes($fileSize),
                         $fileMime
                     ));
                 }
@@ -306,7 +294,7 @@ class YouTrustTestController extends AbstractController
     public function listSignatureRequests(Request $request): Response
     {
         if (!$this->youTrustService->isConfigured()) {
-            $this->addFlash('error', 'YouTrust service is not configured');
+            $this->addFlash('error', 'Le service YouTrust n\'est pas configuré');
             return $this->redirectToRoute('test_you_trust_index');
         }
 
@@ -330,7 +318,7 @@ class YouTrustTestController extends AbstractController
     {
         try {
             $this->youTrustService->activateSignatureRequest($signatureRequestId);
-            $this->addFlash('success', sprintf('Signature request %s activated', $signatureRequestId));
+            $this->addFlash('success', sprintf('Demande de signature %s activée', $signatureRequestId));
         } catch (YouTrustApiException $e) {
             $this->addFlash('error', $e->getMessage());
         } catch (\Exception $e) {
@@ -348,7 +336,7 @@ class YouTrustTestController extends AbstractController
     {
         try {
             $this->youTrustService->cancelSignatureRequest($signatureRequestId);
-            $this->addFlash('success', sprintf('Signature request %s cancelled', $signatureRequestId));
+            $this->addFlash('success', sprintf('Demande de signature %s annulée', $signatureRequestId));
         } catch (YouTrustApiException $e) {
             $this->addFlash('error', $e->getMessage());
         } catch (\Exception $e) {
@@ -366,7 +354,7 @@ class YouTrustTestController extends AbstractController
     {
         try {
             $this->youTrustService->deleteSignatureRequest($signatureRequestId);
-            $this->addFlash('success', sprintf('Signature request %s deleted', $signatureRequestId));
+            $this->addFlash('success', sprintf('Demande de signature %s supprimée', $signatureRequestId));
         } catch (YouTrustApiException $e) {
             $this->addFlash('error', $e->getMessage());
         } catch (\Exception $e) {
@@ -380,20 +368,6 @@ class YouTrustTestController extends AbstractController
      * Helper function to format bytes.
      */
     private function formatBytes(int $bytes): string
-    {
-        $units = ['B', 'KB', 'MB', 'GB'];
-        $i = 0;
-        while ($bytes >= 1024 && $i < count($units) - 1) {
-            $bytes /= 1024;
-            $i++;
-        }
-        return round($bytes, 2) . ' ' . $units[$i];
-    }
-}
-
-// Helper function for Twig
-if (!function_exists('format_bytes')) {
-    function format_bytes(int $bytes): string
     {
         $units = ['B', 'KB', 'MB', 'GB'];
         $i = 0;

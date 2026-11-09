@@ -1,72 +1,82 @@
-{# templates/you_trust_test/_signer_row.html.twig #}
-{% if index is not defined %}
-    {% set index = 0 %}
-{% endif %}
+{# Ligne de signataire. `index` est un entier, ou '__INDEX__' quand rendue dans le <template> Stimulus. #}
+{% set index = index|default(0) %}
+{% set num = index == '__INDEX__' ? '__NUM__' : index + 1 %}
 
-<div class="signer-box" id="signer_box_{{ index }}">
-    <div class="signer-header">
-        <span class="signer-index">{{ index + 1 }}</span>
-        <h3>Signer {{ index + 1 }}</h3>
-        <button type="button" onclick="removeSigner({{ index }})" 
-                style="background: none; border: none; color: #e74c3c; cursor: pointer; font-size: 20px;">
+<div class="bg-gray-50 border border-gray-200 rounded-xl p-4"
+     data-signers-target="signer"
+     data-index="{{ index }}">
+    <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-3">
+            <span class="w-7 h-7 rounded-full bg-indigo-600 text-white text-sm font-bold flex items-center justify-center"
+                  data-signers-target="num">{{ num }}</span>
+            <h3 class="font-semibold text-gray-900">Signataire {{ num }}</h3>
+        </div>
+        <button type="button"
+                data-action="signers#remove"
+                class="text-red-600 hover:text-red-800 text-xl font-bold leading-none px-2"
+                title="Retirer ce signataire">
             ×
         </button>
     </div>
-    
-    <div class="grid-2">
-        <div class="form-group">
-            <label>First Name *</label>
-            <input type="text" name="signer_{{ index }}_first_name" 
-                   value="{{ signer.first_name|default('') }}" required>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1" for="signer_{{ index }}_first_name">Prénom *</label>
+            <input type="text" id="signer_{{ index }}_first_name" name="signer_{{ index }}_first_name"
+                   value="{{ signer.first_name|default('') }}" required
+                   class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
         </div>
-        <div class="form-group">
-            <label>Last Name *</label>
-            <input type="text" name="signer_{{ index }}_last_name" 
-                   value="{{ signer.last_name|default('') }}" required>
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1" for="signer_{{ index }}_last_name">Nom *</label>
+            <input type="text" id="signer_{{ index }}_last_name" name="signer_{{ index }}_last_name"
+                   value="{{ signer.last_name|default('') }}" required
+                   class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1" for="signer_{{ index }}_email">E-mail *</label>
+            <input type="email" id="signer_{{ index }}_email" name="signer_{{ index }}_email"
+                   value="{{ signer.email|default('') }}" required
+                   class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1" for="signer_{{ index }}_phone_number">Téléphone *</label>
+            <input type="tel" id="signer_{{ index }}_phone_number" name="signer_{{ index }}_phone_number"
+                   value="{{ signer.phone_number|default('') }}" placeholder="+33612345678" required
+                   class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
         </div>
     </div>
-    
-    <div class="grid-2">
-        <div class="form-group">
-            <label>Email *</label>
-            <input type="email" name="signer_{{ index }}_email" 
-                   value="{{ signer.email|default('') }}" required>
-        </div>
-        <div class="form-group">
-            <label>Phone Number *</label>
-            <input type="tel" name="signer_{{ index }}_phone_number" 
-                   value="{{ signer.phone_number|default('') }}" 
-                   placeholder="+33612345678" required>
-        </div>
-    </div>
-    
-    <div class="grid-4">
-        <div class="form-group">
-            <label>Locale</label>
-            <select name="signer_{{ index }}_locale">
+
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1" for="signer_{{ index }}_locale">Langue</label>
+            <select id="signer_{{ index }}_locale" name="signer_{{ index }}_locale"
+                    class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                 <option value="fr" {% if signer.locale|default('fr') == 'fr' %}selected{% endif %}>Français</option>
                 <option value="en" {% if signer.locale|default('fr') == 'en' %}selected{% endif %}>English</option>
                 <option value="es" {% if signer.locale|default('fr') == 'es' %}selected{% endif %}>Español</option>
                 <option value="de" {% if signer.locale|default('fr') == 'de' %}selected{% endif %}>Deutsch</option>
             </select>
         </div>
-        <div class="form-group">
-            <label>Signature Level</label>
-            <select name="signer_{{ index }}_signature_level">
-                <option value="electronic_signature" {% if signer.signature_level|default('electronic_signature') == 'electronic_signature' %}selected{% endif %}>Electronic</option>
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1" for="signer_{{ index }}_signature_level">Niveau de signature</label>
+            <select id="signer_{{ index }}_signature_level" name="signer_{{ index }}_signature_level"
+                    class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                <option value="electronic_signature" {% if signer.signature_level|default('electronic_signature') == 'electronic_signature' %}selected{% endif %}>Électronique</option>
             </select>
         </div>
-        <div class="form-group">
-            <label>Delivery Mode</label>
-            <select name="signer_{{ index }}_delivery_mode">
-                <option value="email" {% if signer.delivery_mode|default('email') == 'email' %}selected{% endif %}>Email</option>
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1" for="signer_{{ index }}_delivery_mode">Mode d'envoi</label>
+            <select id="signer_{{ index }}_delivery_mode" name="signer_{{ index }}_delivery_mode"
+                    class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                <option value="email" {% if signer.delivery_mode|default('email') == 'email' %}selected{% endif %}>E-mail</option>
             </select>
         </div>
-        <div class="form-group">
-            <label>Auth Mode</label>
-            <select name="signer_{{ index }}_signature_authentication_mode">
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1" for="signer_{{ index }}_signature_authentication_mode">Authentification</label>
+            <select id="signer_{{ index }}_signature_authentication_mode" name="signer_{{ index }}_signature_authentication_mode"
+                    class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                 <option value="otp_sms" {% if signer.signature_authentication_mode|default('otp_sms') == 'otp_sms' %}selected{% endif %}>OTP SMS</option>
-                <option value="otp_email" {% if signer.signature_authentication_mode|default('otp_sms') == 'otp_email' %}selected{% endif %}>OTP Email</option>
+                <option value="otp_email" {% if signer.signature_authentication_mode|default('otp_sms') == 'otp_email' %}selected{% endif %}>OTP e-mail</option>
             </select>
         </div>
     </div>

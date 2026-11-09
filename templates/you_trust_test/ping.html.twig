@@ -1,216 +1,78 @@
 {# templates/you_trust_test/ping.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block title %}Ping API - YouTrust Test{% endblock %}
-
-{% block stylesheets %}
-{{ parent() }}
-<style>
-    .you-trust-test {
-        max-width: 800px;
-        margin: 20px auto;
-        padding: 20px;
-    }
-    .you-trust-test h1 {
-        color: #2c3e50;
-        border-bottom: 2px solid #f39c12;
-        padding-bottom: 10px;
-    }
-    .you-trust-test .card {
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        padding: 20px;
-        margin-bottom: 20px;
-    }
-    .you-trust-test .card h2 {
-        color: #f39c12;
-        margin-top: 0;
-    }
-    .you-trust-test nav.test-nav {
-        display: flex;
-        gap: 10px;
-        margin-bottom: 20px;
-        flex-wrap: wrap;
-    }
-    .you-trust-test nav.test-nav a {
-        padding: 10px 15px;
-        background: #ecf0f1;
-        color: #2c3e50;
-        text-decoration: none;
-        border-radius: 4px;
-        transition: background 0.3s;
-    }
-    .you-trust-test nav.test-nav a:hover {
-        background: #bdc3c7;
-    }
-    .you-trust-test .alert {
-        padding: 15px;
-        border-radius: 4px;
-        margin-bottom: 20px;
-    }
-    .you-trust-test .alert-success {
-        background: #d4edda;
-        color: #155724;
-        border: 1px solid #c3e6cb;
-    }
-    .you-trust-test .alert-error {
-        background: #f8d7da;
-        color: #721c24;
-        border: 1px solid #f5c6cb;
-    }
-    .you-trust-test .alert-warning {
-        background: #fff3cd;
-        color: #856404;
-        border: 1px solid #ffeeba;
-    }
-    .you-trust-test .data-grid {
-        display: grid;
-        gap: 15px;
-        margin: 20px 0;
-    }
-    .you-trust-test .data-item {
-        display: flex;
-        justify-content: space-between;
-        padding: 12px;
-        background: #f8f9fa;
-        border-radius: 4px;
-        border-left: 4px solid #f39c12;
-    }
-    .you-trust-test .data-item .label {
-        font-weight: bold;
-        color: #2c3e50;
-    }
-    .you-trust-test .data-item .value {
-        color: #7f8c8d;
-        font-family: monospace;
-    }
-    .you-trust-test .status-badge {
-        display: inline-block;
-        padding: 5px 15px;
-        border-radius: 20px;
-        font-size: 14px;
-        font-weight: bold;
-    }
-    .you-trust-test .status-online {
-        background: #27ae60;
-        color: white;
-    }
-    .you-trust-test .status-offline {
-        background: #e74c3c;
-        color: white;
-    }
-    .you-trust-test .status-warning {
-        background: #f39c12;
-        color: white;
-    }
-    .you-trust-test .code-block {
-        background: #2d2d2d;
-        color: #f8f8f2;
-        padding: 15px;
-        border-radius: 4px;
-        overflow-x: auto;
-        font-family: monospace;
-        font-size: 13px;
-        white-space: pre-wrap;
-    }
-</style>
-{% endblock %}
+{% block title %}YouTrust — Ping API{% endblock %}
 
 {% block body %}
-<div class="you-trust-test">
-    <h1>🏓 API Connectivity Test</h1>
+<main class="min-h-screen bg-gray-50 px-4 py-10">
+    <div class="max-w-2xl mx-auto">
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">Test de connectivité API</h1>
+        <p class="text-gray-600 mb-6">Vérifie la configuration du service YouTrust.</p>
 
-    <nav class="test-nav">
-        <a href="{{ path('test_you_trust_index') }}">🏠 Create Request</a>
-        <a href="{{ path('test_you_trust_list') }}">📊 List Requests</a>
-        <a href="{{ path('test_you_trust_ping') }}">🏓 Ping API</a>
-        <a href="{{ path('test_you_trust_upload_test') }}">📁 Upload Test</a>
-    </nav>
+        {% include 'you_trust_test/_nav.html.twig' with { current: 'test_you_trust_ping' } %}
+        {% include 'you_trust_test/_flashes.html.twig' %}
 
-    {% if error is defined %}
-        <div class="alert alert-error">
-            ❌ Connection failed: {{ error }}
-        </div>
-    {% endif %}
-
-    <div class="card">
-        <h2>📊 YouTrust API Configuration</h2>
-
-        <div class="data-grid">
-            <div class="data-item">
-                <span class="label">API URL:</span>
-                <span class="value">{{ config.apiUrl|default('Not configured') }}</span>
+        {% if error is defined %}
+            <div class="border border-red-200 bg-red-50 text-red-800 rounded-lg p-4 mb-6 text-sm" role="alert">
+                Échec de connexion : {{ error }}
             </div>
-            <div class="data-item">
-                <span class="label">API Version:</span>
-                <span class="value">{{ config.apiVersion|default('Not configured') }}</span>
+        {% endif %}
+
+        <section class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
+            <h2 class="text-lg font-semibold text-gray-900 mb-4">Configuration de l'API YouTrust</h2>
+
+            <dl class="divide-y divide-gray-100">
+                <div class="flex justify-between gap-4 py-3">
+                    <dt class="text-sm font-medium text-gray-700">URL de l'API</dt>
+                    <dd class="text-sm font-mono text-gray-900 break-all text-right">{{ config.apiUrl|default('Non configurée') }}</dd>
+                </div>
+                <div class="flex justify-between gap-4 py-3">
+                    <dt class="text-sm font-medium text-gray-700">Version de l'API</dt>
+                    <dd class="text-sm font-mono text-gray-900">{{ config.apiVersion|default('Non configurée') }}</dd>
+                </div>
+                <div class="flex justify-between gap-4 py-3">
+                    <dt class="text-sm font-medium text-gray-700">Clé API</dt>
+                    <dd class="text-sm text-gray-900">
+                        {% if config.apiKey|default('') is not empty %}
+                            <span class="text-green-700 font-medium">Configurée (masquée)</span>
+                        {% else %}
+                            <span class="text-red-700 font-medium">Non configurée</span>
+                        {% endif %}
+                    </dd>
+                </div>
+                <div class="flex justify-between gap-4 py-3">
+                    <dt class="text-sm font-medium text-gray-700">Timeout</dt>
+                    <dd class="text-sm font-mono text-gray-900">{{ config.timeout|default(30) }} s</dd>
+                </div>
+            </dl>
+
+            <div class="mt-4">
+                {% if isConfigured %}
+                    <span class="inline-flex px-3 py-1 rounded-full text-sm font-semibold bg-green-100 text-green-800">API configurée</span>
+                {% else %}
+                    <span class="inline-flex px-3 py-1 rounded-full text-sm font-semibold bg-red-100 text-red-800">API non configurée</span>
+                {% endif %}
             </div>
-            <div class="data-item">
-                <span class="label">API Key:</span>
-                <span class="value">
-                    {% if config.apiKey and config.apiKey|length > 0 %}
-                        ✅ Configured (hidden for security)
-                    {% else %}
-                        ❌ Not configured
-                    {% endif %}
-                </span>
-            </div>
-            <div class="data-item">
-                <span class="label">Timeout:</span>
-                <span class="value">{{ config.timeout|default('30') }} seconds</span>
-            </div>
-        </div>
+        </section>
 
-        <div style="margin-top: 20px;">
-            {% if isConfigured %}
-                <span class="status-badge status-online">✅ Online - API is configured</span>
-            {% else %}
-                <span class="status-badge status-offline">❌ Offline - API is not configured</span>
-            {% endif %}
-        </div>
-    </div>
-
-    <div class="card">
-        <h2>🔧 Configuration Instructions</h2>
-
-        <p>To configure the YouTrust API service, add the following to your <code>.env</code> file:</p>
-
-        <div class="code-block"># YouTrust API Configuration
+        <section class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
+            <h2 class="text-lg font-semibold text-gray-900 mb-4">Instructions de configuration</h2>
+            <p class="text-sm text-gray-600 mb-3">Ajoutez ceci à votre fichier <code class="font-mono text-xs bg-gray-100 px-1 py-0.5 rounded">.env</code> :</p>
+            <pre class="bg-gray-900 text-gray-100 rounded-lg p-4 text-xs overflow-x-auto font-mono"># Configuration de l'API YouTrust
 YOU_TRUST_API_URL=https://api-sandbox.yousign.app
 YOU_TRUST_API_KEY=your_api_key_here
 YOU_TRUST_API_VERSION=v3
-YOU_TRUST_TIMEOUT=30</div>
+YOU_TRUST_TIMEOUT=30</pre>
+            <p class="text-sm text-gray-600 mt-3">
+                En production, utilisez <code class="font-mono text-xs bg-gray-100 px-1 py-0.5 rounded">https://api.yousign.app</code> et votre clé de production.
+                Pensez à vider le cache Symfony (<code class="font-mono text-xs bg-gray-100 px-1 py-0.5 rounded">php bin/console cache:clear</code>) après modification.
+            </p>
+        </section>
 
-        <p style="margin-top: 20px;">
-            <strong>Note:</strong> For production, use the production API URL: 
-            <code>https://api.yousign.app</code> and your production API key.
-        </p>
-    </div>
-
-    <div class="card">
-        <h2>💡 Tips</h2>
-        <ul style="padding-left: 20px; line-height: 1.8;">
-            <li>Make sure you have a valid YouTrust (YouSign) account</li>
-            <li>Generate your API key from the YouTrust dashboard</li>
-            <li>Use sandbox environment for testing: <code>https://api-sandbox.yousign.app</code></li>
-            <li>After configuring, clear the Symfony cache: <code>php bin/console cache:clear</code></li>
-            <li>Test the connection by refreshing this page</li>
-        </ul>
-    </div>
-
-    <div class="card" style="text-align: center;">
-        <a href="{{ path('test_you_trust_index') }}" class="btn btn-primary" style="
-            display: inline-block;
-            padding: 12px 24px;
-            background: #3498db;
-            color: white;
-            text-decoration: none;
-            border-radius: 4px;
-            cursor: pointer;
-        ">
-            ← Back to Test Form
+        <a href="{{ path('test_you_trust_index') }}"
+           class="inline-block py-2 px-4 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 transition">
+            ← Retour au formulaire de test
         </a>
     </div>
-</div>
+</main>
 {% endblock %}

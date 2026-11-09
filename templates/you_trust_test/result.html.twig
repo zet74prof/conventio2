@@ -1,302 +1,135 @@
 {# templates/you_trust_test/result.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block title %}Result - YouTrust Test{% endblock %}
-
-{% block stylesheets %}
-{{ parent() }}
-<style>
-    .you-trust-test {
-        max-width: 1200px;
-        margin: 20px auto;
-        padding: 20px;
-    }
-    .you-trust-test h1 {
-        color: #2c3e50;
-        border-bottom: 2px solid #27ae60;
-        padding-bottom: 10px;
-    }
-    .you-trust-test .card {
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        padding: 20px;
-        margin-bottom: 20px;
-    }
-    .you-trust-test .card h2 {
-        color: #27ae60;
-        margin-top: 0;
-    }
-    .you-trust-test nav.test-nav {
-        display: flex;
-        gap: 10px;
-        margin-bottom: 20px;
-        flex-wrap: wrap;
-    }
-    .you-trust-test nav.test-nav a {
-        padding: 10px 15px;
-        background: #ecf0f1;
-        color: #2c3e50;
-        text-decoration: none;
-        border-radius: 4px;
-        transition: background 0.3s;
-    }
-    .you-trust-test nav.test-nav a:hover {
-        background: #bdc3c7;
-    }
-    .you-trust-test .alert {
-        padding: 15px;
-        border-radius: 4px;
-        margin-bottom: 20px;
-    }
-    .you-trust-test .alert-success {
-        background: #d4edda;
-        color: #155724;
-        border: 1px solid #c3e6cb;
-    }
-    .you-trust-test .alert-error {
-        background: #f8d7da;
-        color: #721c24;
-        border: 1px solid #f5c6cb;
-    }
-    .you-trust-test .data-table {
-        width: 100%;
-        border-collapse: collapse;
-        margin: 15px 0;
-    }
-    .you-trust-test .data-table th,
-    .you-trust-test .data-table td {
-        padding: 12px;
-        text-align: left;
-        border-bottom: 1px solid #eee;
-    }
-    .you-trust-test .data-table th {
-        background: #f8f9fa;
-        font-weight: bold;
-        color: #2c3e50;
-    }
-    .you-trust-test .data-table tr:hover {
-        background: #f8f9fa;
-    }
-    .you-trust-test .btn {
-        padding: 10px 20px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 14px;
-        transition: background-color 0.3s;
-        text-decoration: none;
-        display: inline-block;
-        margin-right: 10px;
-    }
-    .you-trust-test .btn-primary {
-        background: #3498db;
-        color: white;
-    }
-    .you-trust-test .btn-primary:hover {
-        background: #2980b9;
-    }
-    .you-trust-test .btn-success {
-        background: #27ae60;
-        color: white;
-    }
-    .you-trust-test .btn-warning {
-        background: #f39c12;
-        color: white;
-    }
-    .you-trust-test pre {
-        background: #f4f4f4;
-        padding: 15px;
-        border-radius: 4px;
-        overflow-x: auto;
-        font-size: 13px;
-        max-height: 300px;
-        overflow-y: auto;
-    }
-    .you-trust-test .json-container {
-        background: #f8f9fa;
-        padding: 15px;
-        border-radius: 4px;
-        margin: 15px 0;
-    }
-    .you-trust-test .copy-btn {
-        background: #3498db;
-        color: white;
-        border: none;
-        padding: 5px 10px;
-        border-radius: 3px;
-        cursor: pointer;
-        font-size: 12px;
-    }
-    .you-trust-test .summary-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 15px;
-        margin: 20px 0;
-    }
-    .you-trust-test .summary-item {
-        background: white;
-        padding: 15px;
-        border-radius: 8px;
-        border: 1px solid #eee;
-        text-align: center;
-    }
-    .you-trust-test .summary-item .value {
-        font-size: 24px;
-        font-weight: bold;
-        color: #27ae60;
-    }
-    .you-trust-test .summary-item .label {
-        color: #7f8c8d;
-        font-size: 14px;
-    }
-</style>
-{% endblock %}
+{% block title %}YouTrust — Demande créée{% endblock %}
 
 {% block body %}
-<div class="you-trust-test">
-    <h1>✅ Signature Request Created Successfully!</h1>
+<main class="min-h-screen bg-gray-50 px-4 py-10">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">Demande de signature créée</h1>
+        <p class="text-gray-600 mb-6">Résultat renvoyé par l'API YouTrust.</p>
 
-    <nav class="test-nav">
-        <a href="{{ path('test_you_trust_index') }}">🏠 Create New Request</a>
-        <a href="{{ path('test_you_trust_list') }}">📊 List Requests</a>
-        <a href="{{ path('test_you_trust_ping') }}">🏓 Ping API</a>
-    </nav>
+        {% include 'you_trust_test/_nav.html.twig' with { current: '' } %}
+        {% include 'you_trust_test/_flashes.html.twig' %}
 
-    {# Summary Section #}
-    <div class="card">
-        <h2>📊 Summary</h2>
-        <div class="summary-grid">
-            <div class="summary-item">
-                <div class="value">{{ result.name|default('N/A') }}</div>
-                <div class="label">Request Name</div>
+        <section class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
+            <h2 class="text-lg font-semibold text-gray-900 mb-4">Résumé</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <div class="text-sm text-gray-500 mb-1">Nom</div>
+                    <div class="font-semibold text-gray-900 break-all">{{ result.name|default('N/A') }}</div>
+                </div>
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <div class="text-sm text-gray-500 mb-1">ID externe</div>
+                    <div class="font-semibold text-gray-900 break-all">{{ result.external_id|default('N/A') }}</div>
+                </div>
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <div class="text-sm text-gray-500 mb-1">Statut</div>
+                    <div class="font-semibold text-gray-900">{{ result.status|default('N/A') }}</div>
+                </div>
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <div class="text-sm text-gray-500 mb-1">ID de la demande</div>
+                    <div class="font-mono text-sm text-gray-900 break-all">{{ result.id|default('N/A') }}</div>
+                </div>
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <div class="text-sm text-gray-500 mb-1">Signataires</div>
+                    <div class="font-semibold text-gray-900">{{ config.signer_count|default(0) }}</div>
+                </div>
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <div class="text-sm text-gray-500 mb-1">Documents</div>
+                    <div class="font-semibold text-gray-900">{{ result.documents is defined ? result.documents|length : 0 }}</div>
+                </div>
             </div>
-            <div class="summary-item">
-                <div class="value">{{ result.external_id|default('N/A') }}</div>
-                <div class="label">External ID</div>
+        </section>
+
+        {% if result.documents is defined and result.documents|length > 0 %}
+            <section class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">Documents</h2>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead>
+                            <tr class="bg-gray-50">
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">#</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">ID</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Nom</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Nature</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Statut</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            {% for document in result.documents %}
+                                <tr>
+                                    <td class="px-4 py-3 text-sm text-gray-500">{{ loop.index }}</td>
+                                    <td class="px-4 py-3 text-sm"><code class="font-mono text-xs text-gray-700">{{ document.id|default('N/A') }}</code></td>
+                                    <td class="px-4 py-3 text-sm text-gray-900">{{ document.name|default('N/A') }}</td>
+                                    <td class="px-4 py-3 text-sm text-gray-700">{{ document.nature|default('N/A') }}</td>
+                                    <td class="px-4 py-3 text-sm text-gray-700">{{ document.status|default('N/A') }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        {% endif %}
+
+        {% if result.signers is defined and result.signers|length > 0 %}
+            <section class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">Signataires</h2>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead>
+                            <tr class="bg-gray-50">
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">#</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">ID</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Nom</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">E-mail</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Téléphone</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Statut</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Ordre</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            {% for signer in result.signers %}
+                                <tr>
+                                    <td class="px-4 py-3 text-sm text-gray-500">{{ loop.index }}</td>
+                                    <td class="px-4 py-3 text-sm"><code class="font-mono text-xs text-gray-700">{{ signer.id|default('N/A') }}</code></td>
+                                    <td class="px-4 py-3 text-sm text-gray-900">{{ signer.first_name|default('') }} {{ signer.last_name|default('') }}</td>
+                                    <td class="px-4 py-3 text-sm text-gray-700">{{ signer.email|default('N/A') }}</td>
+                                    <td class="px-4 py-3 text-sm text-gray-700">{{ signer.phone_number|default('N/A') }}</td>
+                                    <td class="px-4 py-3 text-sm text-gray-700">{{ signer.status|default('N/A') }}</td>
+                                    <td class="px-4 py-3 text-sm text-gray-700">{{ signer.info.signing_order|default('N/A') }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        {% endif %}
+
+        <section class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6"
+                 data-controller="clipboard">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-semibold text-gray-900">Réponse API complète</h2>
+                <button type="button"
+                        data-action="clipboard#copy"
+                        class="px-3 py-1.5 rounded-lg bg-indigo-600 text-white text-xs font-medium hover:bg-indigo-700 transition">
+                    Copier le JSON
+                </button>
             </div>
-            <div class="summary-item">
-                <div class="value">{{ result.status|default('N/A') }}</div>
-                <div class="label">Status</div>
-            </div>
-            <div class="summary-item">
-                <div class="value">{{ result.id|default('N/A') }}</div>
-                <div class="label">Request ID</div>
-            </div>
-            <div class="summary-item">
-                <div class="value">{{ config.signer_count|default(0) }}</div>
-                <div class="label">Signers</div>
-            </div>
-            <div class="summary-item">
-                <div class="value">{{ result.documents|length|default(0) }}</div>
-                <div class="label">Documents</div>
-            </div>
+            <pre data-clipboard-target="source"
+                 class="bg-gray-900 text-gray-100 rounded-lg p-4 text-xs overflow-x-auto max-h-80 overflow-y-auto font-mono">{{ result|json_encode(constant('JSON_PRETTY_PRINT')) }}</pre>
+        </section>
+
+        <div class="flex flex-wrap gap-3">
+            <a href="{{ path('test_you_trust_index') }}"
+               class="py-2 px-4 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 transition">
+                Créer une autre demande
+            </a>
+            <a href="{{ path('test_you_trust_list') }}"
+               class="py-2 px-4 rounded-lg border border-indigo-600 text-indigo-600 text-sm font-medium hover:bg-indigo-50 transition">
+                Voir toutes les demandes
+            </a>
         </div>
     </div>
-
-    {# Documents Section #}
-    {% if result.documents is defined and result.documents|length > 0 %}
-    <div class="card">
-        <h2>📄 Documents</h2>
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Nature</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for document in result.documents %}
-                <tr>
-                    <td>{{ loop.index }}</td>
-                    <td><code>{{ document.id|default('N/A') }}</code></td>
-                    <td>{{ document.name|default('N/A') }}</td>
-                    <td>{{ document.nature|default('N/A') }}</td>
-                    <td>{{ document.status|default('N/A') }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    {% endif %}
-
-    {# Signers Section #}
-    {% if result.signers is defined and result.signers|length > 0 %}
-    <div class="card">
-        <h2>👥 Signers</h2>
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                    <th>Status</th>
-                    <th>Order</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for signer in result.signers %}
-                <tr>
-                    <td>{{ loop.index }}</td>
-                    <td><code>{{ signer.id|default('N/A') }}</code></td>
-                    <td>{{ signer.first_name|default('') }} {{ signer.last_name|default('') }}</td>
-                    <td>{{ signer.email|default('N/A') }}</td>
-                    <td>{{ signer.phone_number|default('N/A') }}</td>
-                    <td>{{ signer.status|default('N/A') }}</td>
-                    <td>{{ signer.info.signing_order|default('N/A') }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    {% endif %}
-
-    {# Full JSON Response #}
-    <div class="card">
-        <h2>🔍 Full API Response</h2>
-        <p>
-            <button class="copy-btn" onclick="copyToClipboard()">Copy JSON</button>
-        </p>
-        <div class="json-container">
-            <pre id="json_response">{{ result|json_encode(256)|raw }}</pre>
-        </div>
-    </div>
-
-    {# Raw Data #}
-    <div class="card">
-        <h2>📦 Raw Data Dump</h2>
-        <p style="color: #7f8c8d; margin-bottom: 10px;">
-            This section shows all available data from the API response.
-        </p>
-        
-        <div class="json-container">
-            <pre>{{ dump(result) }}</pre>
-        </div>
-    </div>
-
-    <div class="card" style="text-align: center;">
-        <a href="{{ path('test_you_trust_index') }}" class="btn btn-primary">
-            ✅ Create Another Request
-        </a>
-        <a href="{{ path('test_you_trust_list') }}" class="btn btn-success">
-            📊 View All Requests
-        </a>
-    </div>
-</div>
-
-<script>
-    function copyToClipboard() {
-        const json = document.getElementById('json_response').textContent;
-        navigator.clipboard.writeText(json).then(function() {
-            alert('JSON copied to clipboard!');
-        }).catch(function(err) {
-            console.error('Failed to copy: ', err);
-        });
-    }
-</script>
+</main>
 {% endblock %}

@@ -1,0 +1,14 @@
+{# Messages flash, stylisés selon leur type. #}
+{% for type, messages in app.flashes %}
+    {% for message in messages %}
+        {% set styles = {
+            success: 'bg-green-50 border-green-200 text-green-800',
+            error: 'bg-red-50 border-red-200 text-red-800',
+            warning: 'bg-amber-50 border-amber-200 text-amber-800',
+            info: 'bg-blue-50 border-blue-200 text-blue-800'
+        } %}
+        <div class="border rounded-lg p-4 mb-6 text-sm {{ styles[type]|default('bg-gray-50 border-gray-200 text-gray-800') }}" role="alert">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endfor %}

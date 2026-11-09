@@ -1,485 +1,201 @@
 {# templates/you_trust_test/index.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block title %}YouTrust Test - Signature Request Creator{% endblock %}
-
-{% block stylesheets %}
-{{ parent() }}
-<style>
-    .you-trust-test {
-        max-width: 1200px;
-        margin: 20px auto;
-        padding: 20px;
-    }
-    .you-trust-test h1 {
-        color: #2c3e50;
-        border-bottom: 2px solid #3498db;
-        padding-bottom: 10px;
-    }
-    .you-trust-test .card {
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        padding: 20px;
-        margin-bottom: 20px;
-    }
-    .you-trust-test .card h2 {
-        color: #3498db;
-        margin-top: 0;
-    }
-    .you-trust-test .form-section {
-        margin-bottom: 30px;
-        padding: 20px;
-        background: #f8f9fa;
-        border-radius: 8px;
-    }
-    .you-trust-test .form-group {
-        margin-bottom: 15px;
-    }
-    .you-trust-test .form-group label {
-        display: block;
-        margin-bottom: 5px;
-        font-weight: bold;
-        color: #2c3e50;
-    }
-    .you-trust-test .form-group input[type="text"],
-    .you-trust-test .form-group input[type="email"],
-    .you-trust-test .form-group input[type="tel"],
-    .you-trust-test .form-group input[type="number"],
-    .you-trust-test .form-group textarea,
-    .you-trust-test .form-group select {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        font-size: 14px;
-        box-sizing: border-box;
-    }
-    .you-trust-test .form-group textarea {
-        min-height: 100px;
-        resize: vertical;
-    }
-    .you-trust-test .form-group input[type="file"] {
-        padding: 5px;
-    }
-    .you-trust-test .form-group input[type="checkbox"] {
-        width: auto;
-        margin-right: 10px;
-    }
-    .you-trust-test .btn {
-        padding: 12px 24px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 16px;
-        transition: background-color 0.3s;
-    }
-    .you-trust-test .btn-primary {
-        background: #3498db;
-        color: white;
-    }
-    .you-trust-test .btn-primary:hover {
-        background: #2980b9;
-    }
-    .you-trust-test .btn-secondary {
-        background: #95a5a6;
-        color: white;
-    }
-    .you-trust-test .btn-danger {
-        background: #e74c3c;
-        color: white;
-    }
-    .you-trust-test .btn-success {
-        background: #27ae60;
-        color: white;
-    }
-    .you-trust-test .signer-box {
-        background: white;
-        padding: 15px;
-        border-radius: 8px;
-        margin-bottom: 15px;
-        border: 1px solid #eee;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    }
-    .you-trust-test .signer-box h3 {
-        margin-top: 0;
-        color: #3498db;
-        font-size: 18px;
-    }
-    .you-trust-test .signer-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 15px;
-    }
-    .you-trust-test .signer-index {
-        background: #3498db;
-        color: white;
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-    }
-    .you-trust-test .grid-2 {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 20px;
-    }
-    .you-trust-test .grid-4 {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 15px;
-    }
-    .you-trust-test .alert {
-        padding: 15px;
-        border-radius: 4px;
-        margin-bottom: 20px;
-    }
-    .you-trust-test .alert-success {
-        background: #d4edda;
-        color: #155724;
-        border: 1px solid #c3e6cb;
-    }
-    .you-trust-test .alert-error {
-        background: #f8d7da;
-        color: #721c24;
-        border: 1px solid #f5c6cb;
-    }
-    .you-trust-test .alert-info {
-        background: #d1ecf1;
-        color: #0c5460;
-        border: 1px solid #bee5eb;
-    }
-    .you-trust-test .alert-warning {
-        background: #fff3cd;
-        color: #856404;
-        border: 1px solid #ffeeba;
-    }
-    .you-trust-test .required:after {
-        content: " *";
-        color: #e74c3c;
-    }
-    .you-trust-test nav.test-nav {
-        display: flex;
-        gap: 10px;
-        margin-bottom: 20px;
-        flex-wrap: wrap;
-    }
-    .you-trust-test nav.test-nav a {
-        padding: 10px 15px;
-        background: #ecf0f1;
-        color: #2c3e50;
-        text-decoration: none;
-        border-radius: 4px;
-        transition: background 0.3s;
-    }
-    .you-trust-test nav.test-nav a:hover {
-        background: #bdc3c7;
-    }
-    @media (max-width: 768px) {
-        .you-trust-test .grid-2 {
-            grid-template-columns: 1fr;
-        }
-        .you-trust-test .grid-4 {
-            grid-template-columns: repeat(2, 1fr);
-        }
-    }
-</style>
-{% endblock %}
+{% block title %}YouTrust — Créer une demande de signature{% endblock %}
 
 {% block body %}
-<div class="you-trust-test">
-    <h1>📋 YouTrust Test - Signature Request Creator</h1>
+<main class="min-h-screen bg-gray-50 px-4 py-10">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">YouTrust — Création d'une demande de signature</h1>
+        <p class="text-gray-600 mb-6">Page de test du service YouTrust (environnement sandbox).</p>
 
-    <nav class="test-nav">
-        <a href="{{ path('test_you_trust_index') }}">🏠 Create Request</a>
-        <a href="{{ path('test_you_trust_list') }}">📊 List Requests</a>
-        <a href="{{ path('test_you_trust_ping') }}">🏓 Ping API</a>
-        <a href="{{ path('test_you_trust_upload_test') }}">📁 Upload Test</a>
-    </nav>
+        {% include 'you_trust_test/_nav.html.twig' with { current: 'test_you_trust_index' } %}
+        {% include 'you_trust_test/_flashes.html.twig' %}
 
-    {% for type, messages in app.flashes %}
-        {% for message in messages %}
-            <div class="alert alert-{{ type }}">{{ message|raw }}</div>
-        {% endfor %}
-    {% endfor %}
-
-    {% if not isConfigured %}
-        <div class="alert alert-error">
-            ⚠️ YouTrust API is not configured. Please set <code>YOU_TRUST_API_KEY</code> in your .env file.
-        </div>
-    {% endif %}
-
-    <form action="{{ path('test_you_trust_create_signature_request') }}" method="post" enctype="multipart/form-data">
-        {# General Configuration Section #}
-        <div class="card">
-            <h2>📝 General Signature Request Information</h2>
-            <p class="alert alert-info">All fields with * are required.</p>
-            
-            <div class="grid-2">
-                <div class="form-group">
-                    <label for="name" class="required">Name</label>
-                    <input type="text" id="name" name="name" value="Convention de stage - {{ 'now'|date('Y-m-d H:i') }}" required>
-                </div>
-                <div class="form-group">
-                    <label for="external_id">External ID</label>
-                    <input type="text" id="external_id" name="external_id" value="conv_{{ 'now'|date('YmdHis') }}" placeholder="Optional external reference">
-                </div>
+        {% if not isConfigured %}
+            <div class="border border-red-200 bg-red-50 text-red-800 rounded-lg p-4 mb-6 text-sm" role="alert">
+                L'API YouTrust n'est pas configurée. Définissez <code class="font-mono">YOU_TRUST_API_KEY</code> dans votre fichier <code class="font-mono">.env</code>.
             </div>
+        {% endif %}
 
-            <div class="form-group">
-                <label for="custom_name" class="required">Sender Name (Custom)</label>
-                <input type="text" id="custom_name" name="custom_name" value="Lycée Gabriel Fauré" required>
-            </div>
+        <form action="{{ path('test_you_trust_create_signature_request') }}" method="post" enctype="multipart/form-data" class="space-y-6">
+            <section class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h2 class="text-lg font-semibold text-gray-900 mb-1">Informations générales</h2>
+                <p class="text-sm text-gray-500 mb-4">Les champs marqués d'un * sont requis.</p>
 
-            <div class="grid-2">
-                <div class="form-group">
-                    <label for="request_subject" class="required">Email Subject</label>
-                    <input type="text" id="request_subject" name="request_subject" 
-                           value="Convention de stage de xxxx à signer" required>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1" for="name">Nom *</label>
+                        <input type="text" id="name" name="name" value="Convention de stage - {{ 'now'|date('Y-m-d H:i') }}" required
+                               class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1" for="external_id">ID externe</label>
+                        <input type="text" id="external_id" name="external_id" value="conv_{{ 'now'|date('YmdHis') }}" placeholder="Référence externe facultative"
+                               class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="reminder_subject" class="required">Reminder Subject</label>
-                    <input type="text" id="reminder_subject" name="reminder_subject" 
-                           value="[Rappel]: Convention de stage de xxxx à signer" required>
-                </div>
-            </div>
 
-            <div class="grid-2">
-                <div class="form-group">
-                    <label for="request_body" class="required">Email Body</label>
-                    <textarea id="request_body" name="request_body" required>Merci d'accueillir tel étudiant et de signer sa convention de stage</textarea>
+                <div class="mt-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1" for="custom_name">Nom de l'expéditeur *</label>
+                    <input type="text" id="custom_name" name="custom_name" value="Lycée Gabriel Fauré" required
+                           class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                 </div>
-                <div class="form-group">
-                    <label for="reminder_body" class="required">Reminder Body</label>
-                    <textarea id="reminder_body" name="reminder_body" required>Vous n'avez pas eu le temps de signer?</textarea>
-                </div>
-            </div>
 
-            <div class="grid-4">
-                <div class="form-group">
-                    <label for="timezone">Timezone</label>
-                    <select id="timezone" name="timezone">
-                        <option value="Europe/Paris" selected>Europe/Paris</option>
-                        <option value="UTC">UTC</option>
-                        <option value="Europe/London">Europe/London</option>
-                        <option value="America/New_York">America/New_York</option>
-                    </select>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1" for="request_subject">Objet de l'e-mail *</label>
+                        <input type="text" id="request_subject" name="request_subject" value="Convention de stage de xxxx à signer" required
+                               class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1" for="reminder_subject">Objet du rappel *</label>
+                        <input type="text" id="reminder_subject" name="reminder_subject" value="[Rappel] : Convention de stage de xxxx à signer" required
+                               class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="audit_trail_locale">Audit Trail Locale</label>
-                    <select id="audit_trail_locale" name="audit_trail_locale">
-                        <option value="fr" selected>Français (fr)</option>
-                        <option value="en">English (en)</option>
-                        <option value="es">Español (es)</option>
-                        <option value="de">Deutsch (de)</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="delivery_mode">Delivery Mode</label>
-                    <select id="delivery_mode" name="delivery_mode">
-                        <option value="email" selected>Email</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="smart_anchors_resolution">Smart Anchors Resolution</label>
-                    <select id="smart_anchors_resolution" name="smart_anchors_resolution">
-                        <option value="on_activation" selected>On Activation</option>
-                        <option value="on_upload">On Upload</option>
-                    </select>
-                </div>
-            </div>
 
-            <div class="grid-4">
-                <div class="form-group">
-                    <label for="reminder_interval_in_days">Reminder Interval (days)</label>
-                    <input type="number" id="reminder_interval_in_days" name="reminder_interval_in_days" value="1" min="1" max="30">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1" for="request_body">Corps de l'e-mail *</label>
+                        <textarea id="request_body" name="request_body" required rows="4"
+                                  class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">Merci d'accueillir tel étudiant et de signer sa convention de stage</textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1" for="reminder_body">Corps du rappel *</label>
+                        <textarea id="reminder_body" name="reminder_body" required rows="4"
+                                  class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">Vous n'avez pas eu le temps de signer ?</textarea>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="max_reminder_occurrences">Max Reminders</label>
-                    <input type="number" id="max_reminder_occurrences" name="max_reminder_occurrences" value="5" min="1" max="20">
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1" for="timezone">Fuseau horaire</label>
+                        <select id="timezone" name="timezone"
+                                class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                            <option value="Europe/Paris" selected>Europe/Paris</option>
+                            <option value="UTC">UTC</option>
+                            <option value="Europe/London">Europe/London</option>
+                            <option value="America/New_York">America/New_York</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1" for="audit_trail_locale">Langue de la piste d'audit</label>
+                        <select id="audit_trail_locale" name="audit_trail_locale"
+                                class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                            <option value="fr" selected>Français (fr)</option>
+                            <option value="en">English (en)</option>
+                            <option value="es">Español (es)</option>
+                            <option value="de">Deutsch (de)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1" for="delivery_mode">Mode d'envoi</label>
+                        <select id="delivery_mode" name="delivery_mode"
+                                class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                            <option value="email" selected>E-mail</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1" for="smart_anchors_resolution">Résolution des ancres</label>
+                        <select id="smart_anchors_resolution" name="smart_anchors_resolution"
+                                class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                            <option value="on_activation" selected>À l'activation</option>
+                            <option value="on_upload">À l'upload</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="ordered_signers">
-                        <input type="checkbox" id="ordered_signers" name="ordered_signers" value="1" checked>
-                        Ordered Signers
-                    </label>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1" for="reminder_interval_in_days">Intervalle de rappel (jours)</label>
+                        <input type="number" id="reminder_interval_in_days" name="reminder_interval_in_days" value="1" min="1" max="30"
+                               class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1" for="max_reminder_occurrences">Nombre max de rappels</label>
+                        <input type="number" id="max_reminder_occurrences" name="max_reminder_occurrences" value="5" min="1" max="20"
+                               class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
+                    <div class="flex items-end pb-2">
+                        <label class="flex items-center gap-2 text-sm text-gray-700">
+                            <input type="checkbox" id="ordered_signers" name="ordered_signers" value="1" checked class="accent-indigo-600">
+                            Signataires ordonnés
+                        </label>
+                    </div>
+                    <div class="flex items-end pb-2">
+                        <label class="flex items-center gap-2 text-sm text-gray-700">
+                            <input type="checkbox" id="signers_allowed_to_decline" name="signers_allowed_to_decline" value="1" class="accent-indigo-600">
+                            Refus autorisé
+                        </label>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="signers_allowed_to_decline">
-                        <input type="checkbox" id="signers_allowed_to_decline" name="signers_allowed_to_decline" value="1">
-                        Allow Decline
-                    </label>
+            </section>
+
+            <section class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h2 class="text-lg font-semibold text-gray-900 mb-1">Document</h2>
+                <p class="text-sm text-gray-500 mb-4">Téléversez le document PDF à faire signer.</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1" for="document">Document PDF *</label>
+                        <input type="file" id="document" name="document" accept=".pdf" required
+                               class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm file:mr-3 file:rounded-lg file:border-0 file:bg-indigo-50 file:px-3 file:py-1 file:text-indigo-700 hover:file:bg-indigo-100">
+                        <p class="text-xs text-gray-500 mt-1">Seuls les fichiers PDF sont acceptés.</p>
+                    </div>
+                    <div class="flex items-end pb-2">
+                        <label class="flex items-center gap-2 text-sm text-gray-700">
+                            <input type="checkbox" id="parse_anchors" name="parse_anchors" value="1" checked class="accent-indigo-600">
+                            Analyser les ancres de signature
+                        </label>
+                    </div>
                 </div>
-            </div>
-        </div>
+            </section>
 
-        {# Document Upload Section #}
-        <div class="card">
-            <h2>📄 Document Upload</h2>
-            <p class="alert alert-info">Upload a PDF document to be signed.</p>
-            
-            <div class="grid-2">
-                <div class="form-group">
-                    <label for="document" class="required">PDF Document</label>
-                    <input type="file" id="document" name="document" accept=".pdf" required>
-                    <small>Only PDF files are accepted</small>
-                </div>
-                <div class="form-group">
-                    <label for="parse_anchors">
-                        <input type="checkbox" id="parse_anchors" name="parse_anchors" value="1" checked>
-                        Parse Anchors
-                    </label>
-                </div>
-            </div>
-        </div>
+            <section class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h2 class="text-lg font-semibold text-gray-900 mb-1">Signataires ({{ defaultSigners|length }})</h2>
+                <p class="text-sm text-gray-500 mb-4">Ajoutez au moins un signataire. Prénom, nom et e-mail sont requis pour chacun.</p>
 
-        {# Signers Section #}
-        <div class="card">
-            <h2>👥 Signers ({{ defaultSigners|length }})</h2>
-            <p class="alert alert-info">Add at least one signer. All fields for each signer are required.</p>
+                <div data-controller="signers" data-signers-count-value="{{ defaultSigners|length }}">
+                    <input type="hidden" name="signer_count" id="signer_count" data-signers-target="count" value="{{ defaultSigners|length }}">
 
-            <input type="hidden" name="signer_count" value="{{ defaultSigners|length }}" id="signer_count">
-            
-            <div id="signers_container">
-                {% for i, signer in defaultSigners %}
-                    {% include 'you_trust_test/_signer_row.html.twig' with {
-                        'index': i,
-                        'signer': signer
-                    } %}
-                {% endfor %}
-            </div>
+                    <div data-signers-target="container" class="space-y-4">
+                        {% for i, signer in defaultSigners %}
+                            {% include 'you_trust_test/_signer_row.html.twig' with { index: i, signer: signer } %}
+                        {% endfor %}
+                    </div>
 
-            <button type="button" onclick="addSigner()" class="btn btn-secondary" style="margin-top: 10px;">
-                + Add Another Signer
-            </button>
-        </div>
+                    <template data-signers-target="template">
+                        {% include 'you_trust_test/_signer_row.html.twig' with { index: '__INDEX__', signer: [] } %}
+                    </template>
 
-        {# Submission Options #}
-        <div class="card">
-            <h2>⚡ Submission Options</h2>
-            
-            <div class="form-group">
-                <label for="activate_immediately">
-                    <input type="checkbox" id="activate_immediately" name="activate_immediately" value="1" checked>
-                    Activate Signature Request Immediately
-                </label>
-                <p style="margin-top: 10px; color: #7f8c8d;">
-                    If checked, the signature request will be activated right after creation.
-                    If unchecked, you'll need to manually activate it later.
-                </p>
-            </div>
-        </div>
-
-        <div class="card" style="text-align: center;">
-            <button type="submit" class="btn btn-primary btn-lg" style="font-size: 18px; padding: 15px 30px;">
-                🚀 Create Signature Request
-            </button>
-        </div>
-    </form>
-</div>
-
-<script>
-    let signerCount = {{ defaultSigners|length }};
-
-    function addSigner() {
-        const container = document.getElementById('signers_container');
-        const template = `
-            <div class="signer-box" id="signer_box_${signerCount}">
-                <div class="signer-header">
-                    <span class="signer-index">${signerCount + 1}</span>
-                    <h3>Signer ${signerCount + 1}</h3>
-                    <button type="button" onclick="removeSigner(${signerCount})" 
-                            style="background: none; border: none; color: #e74c3c; cursor: pointer; font-size: 20px;">
-                        ×
+                    <button type="button"
+                            data-action="signers#add"
+                            class="mt-4 px-4 py-2 rounded-lg border border-indigo-600 text-indigo-600 text-sm font-medium hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
+                        + Ajouter un signataire
                     </button>
                 </div>
-                <div class="grid-2">
-                    <div class="form-group">
-                        <label>First Name *</label>
-                        <input type="text" name="signer_${signerCount}_first_name" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Last Name *</label>
-                        <input type="text" name="signer_${signerCount}_last_name" required>
-                    </div>
-                </div>
-                <div class="grid-2">
-                    <div class="form-group">
-                        <label>Email *</label>
-                        <input type="email" name="signer_${signerCount}_email" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Phone Number *</label>
-                        <input type="tel" name="signer_${signerCount}_phone_number" 
-                               placeholder="+33612345678" required>
-                    </div>
-                </div>
-                <div class="grid-4">
-                    <div class="form-group">
-                        <label>Locale</label>
-                        <select name="signer_${signerCount}_locale">
-                            <option value="fr" selected>Français</option>
-                            <option value="en">English</option>
-                            <option value="es">Español</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Signature Level</label>
-                        <select name="signer_${signerCount}_signature_level">
-                            <option value="electronic_signature" selected>Electronic</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Delivery Mode</label>
-                        <select name="signer_${signerCount}_delivery_mode">
-                            <option value="email" selected>Email</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Auth Mode</label>
-                        <select name="signer_${signerCount}_signature_authentication_mode">
-                            <option value="otp_sms" selected>OTP SMS</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-        `;
-        container.insertAdjacentHTML('beforeend', template);
-        document.getElementById('signer_count').value = signerCount + 1;
-        signerCount++;
-    }
+            </section>
 
-    function removeSigner(index) {
-        if (signerCount <= 1) {
-            alert('At least one signer is required');
-            return;
-        }
-        const box = document.getElementById('signer_box_' + index);
-        if (box) {
-            box.remove();
-            // Renumber remaining signers
-            const boxes = document.querySelectorAll('.signer-box');
-            boxes.forEach((box, i) => {
-                const newIndex = parseInt(box.id.replace('signer_box_', ''));
-                if (newIndex > index) {
-                    // Update all field names
-                    const inputs = box.querySelectorAll('input, select');
-                    inputs.forEach(input => {
-                        const name = input.name;
-                        const newName = name.replace('signer_' + newIndex, 'signer_' + i);
-                        input.name = newName;
-                    });
-                    box.id = 'signer_box_' + i;
-                    box.querySelector('.signer-index').textContent = i + 1;
-                }
-            });
-            document.getElementById('signer_count').value = signerCount - 1;
-            signerCount--;
-        }
-    }
-</script>
+            <section class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">Options d'envoi</h2>
+
+                <label class="flex items-center gap-2 text-sm text-gray-700">
+                    <input type="checkbox" id="activate_immediately" name="activate_immediately" value="1" checked class="accent-indigo-600">
+                    Activer la demande de signature immédiatement
+                </label>
+                <p class="text-xs text-gray-500 mt-2">
+                    Si cette case est décochée, la demande reste en brouillon et devra être activée manuellement depuis la liste.
+                </p>
+            </section>
+
+            <div class="text-center">
+                <button type="submit"
+                        class="py-3 px-8 rounded-lg bg-indigo-600 text-white font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition">
+                    Créer la demande de signature
+                </button>
+            </div>
+        </form>
+    </div>
+</main>
 {% endblock %}
