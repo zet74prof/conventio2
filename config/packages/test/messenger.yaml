@@ -1,0 +1,7 @@
+framework:
+    messenger:
+        transports:
+            sync: 'sync://'
+        routing:
+            # Send emails synchronously in tests so mailer assertions can inspect them
+            Symfony\Component\Mailer\Messenger\SendEmailMessage: sync

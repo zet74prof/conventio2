@@ -1,0 +1,7 @@
+framework:
+    messenger:
+        transports:
+            sync: 'sync://'
+        routing:
+            # Send emails synchronously in dev (visible in the profiler's mailer panel)
+            Symfony\Component\Mailer\Messenger\SendEmailMessage: sync

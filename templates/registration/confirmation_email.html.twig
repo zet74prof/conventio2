@@ -1,0 +1,18 @@
+{# templates/registration/confirmation_email.html.twig #}
+<!DOCTYPE html>
+<html lang="fr">
+    <body style="font-family: sans-serif; color: #111827;">
+        <h1>Bienvenue sur Conventio</h1>
+        <p>Bonjour,</p>
+        <p>Pour confirmer votre adresse e-mail et activer votre compte, cliquez sur le bouton ci-dessous :</p>
+        <p>
+            <a href="{{ signedUrl }}"
+               style="display: inline-block; padding: 12px 24px; background-color: #4f46e5; color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: bold;">
+                Confirmer mon e-mail
+            </a>
+        </p>
+        <p>Ce lien expire {{ expiresAtMessageKey|trans(expiresAtMessageData, 'VerifyEmailBundle') }}.</p>
+        <p>Si vous n'avez pas créé de compte sur Conventio, ignorez cet e-mail.</p>
+        <p>L'équipe Conventio</p>
+    </body>
+</html>

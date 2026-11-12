@@ -45,6 +45,15 @@
                 </div>
             </header>
         {% endblock %}
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="max-w-5xl mx-auto px-4 mt-4">
+                    <div class="rounded-lg border px-4 py-3 text-sm {% if label == 'success' %}border-green-200 bg-green-50 text-green-700{% elseif label == 'error' %}border-red-200 bg-red-50 text-red-700{% else %}border-gray-200 bg-gray-100 text-gray-700{% endif %}">
+                        {{ message }}
+                    </div>
+                </div>
+            {% endfor %}
+        {% endfor %}
         {% block body %}{% endblock %}
     </body>
 </html>
