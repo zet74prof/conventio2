@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Repository\UserRepository;
 use App\Security\EmailVerifier;
+use App\Service\SettingsService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,15 +26,22 @@ class RegistrationController extends AbstractController
         UserPasswordHasherInterface $passwordHasher,
         EntityManagerInterface $entityManager,
         EmailVerifier $emailVerifier,
+        SettingsService $settings,
     ): Response {
         $user = new User();
-        $form = $this->createForm(RegistrationFormType::class, $user);
+        $form = $this->createForm(RegistrationFormType::class, $user, [
+            'email_placeholder' => 'email@'.$settings->getStudentEmailDomain(),
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $user->setPassword(
                 $passwordHasher->hashPassword($user, (string) $form->get('plainPassword')->getData())
             );
+            $user->setRoles(match ($user->getProfile()) {
+                User::PROFILE_TEACHER => ['ROLE_TEACHER'],
+                default => ['ROLE_STUDENT'],
+            });
 
             $entityManager->persist($user);
             $entityManager->flush();
@@ -55,6 +63,11 @@ class RegistrationController extends AbstractController
 
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form,
+            'email_rule' => $settings->getEmailRuleMessage(),
+            'domains' => [
+                User::PROFILE_STUDENT => $settings->getStudentEmailDomain(),
+                User::PROFILE_TEACHER => $settings->getTeacherEmailDomain(),
+            ],
         ]);
     }
 

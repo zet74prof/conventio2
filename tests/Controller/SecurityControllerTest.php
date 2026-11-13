@@ -81,6 +81,9 @@ class SecurityControllerTest extends WebTestCase
     {
         $user = new User();
         $user->setEmail($email);
+        $user->setNom('Dupont');
+        $user->setPrenom('Jean');
+        $user->setProfile(User::PROFILE_STUDENT);
         $user->setPassword(
             self::getContainer()->get(UserPasswordHasherInterface::class)
                 ->hashPassword($user, $plainPassword)

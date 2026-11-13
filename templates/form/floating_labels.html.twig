@@ -1,0 +1,50 @@
+{# Thème de formulaire « floating labels » (étiquette flottante Tailwind).
+   - Champ avec placeholder « filigrane » (ex. e-mail) : l'étiquette est masquée
+     tant que le filigrane est visible, puis flotte en haut à la saisie.
+   - Champ classique (placeholder = espace) : l'étiquette flotte dès le focus. #}
+
+{%- block form_row -%}
+    {%- set is_watermark = attr.placeholder|default(' ') != ' ' -%}
+    {%- set is_invalid = valid is defined and not valid -%}
+    {%- set widget_class = 'peer w-full rounded-lg border bg-white px-3 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 '
+        ~ (is_invalid ? 'border-red-400 focus:border-red-500 focus:ring-red-200 ' : 'border-gray-300 focus:border-indigo-500 focus:ring-indigo-200 ')
+        ~ (is_watermark ? 'focus:placeholder-transparent ' : '')
+        ~ attr.class|default('') -%}
+    {%- set label_class = 'pointer-events-none absolute left-3 bg-white px-1 transition-all '
+        ~ (is_watermark
+            ? 'top-2.5 text-sm text-gray-500 opacity-0 peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-indigo-600 peer-focus:opacity-100 peer-[:not(:placeholder-shown)]:-top-2.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-700 peer-[:not(:placeholder-shown)]:opacity-100'
+            : 'top-2.5 text-sm text-gray-500 peer-placeholder-shown:top-2.5 peer-placeholder-shown:text-sm peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-indigo-600 peer-[:not(:placeholder-shown)]:-top-2.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-700') -%}
+    <div class="relative">
+        {{- form_widget(form, { attr: attr|merge({ class: widget_class, placeholder: attr.placeholder|default(' ') }) }) -}}
+        {{- form_label(form, null, { label_attr: { class: label_class } }) -}}
+        {{- form_errors(form) -}}
+        {{- form_help(form) -}}
+    </div>
+{%- endblock -%}
+
+{%- block choice_row -%}
+    {%- set widget_class = 'peer w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 ' ~ attr.class|default('') -%}
+    <div class="relative">
+        {{- form_widget(form, { attr: attr|merge({ class: widget_class }) }) -}}
+        {{- form_label(form, null, { label_attr: { class: 'pointer-events-none absolute -top-2.5 left-3 bg-white px-1 text-xs text-gray-500' } }) -}}
+        {{- form_errors(form) -}}
+        {{- form_help(form) -}}
+    </div>
+{%- endblock -%}
+
+{%- block repeated_row -%}
+    <div class="space-y-4">
+        {{- form_row(form.first) -}}
+        {{- form_row(form.second) -}}
+    </div>
+{%- endblock -%}
+
+{%- block form_errors -%}
+    {%- if errors|length > 0 -%}
+        <ul class="mt-1 space-y-0.5">
+            {%- for error in errors -%}
+                <li class="text-xs text-red-600">{{ error.message }}</li>
+            {%- endfor -%}
+        </ul>
+    {%- endif -%}
+{%- endblock -%}

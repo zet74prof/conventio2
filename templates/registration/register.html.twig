@@ -1,5 +1,6 @@
 {# templates/registration/register.html.twig #}
 {% extends 'base.html.twig' %}
+{% form_theme registrationForm 'form/floating_labels.html.twig' %}
 
 {% block title %}Conventio — S'enregistrer{% endblock %}
 
@@ -9,13 +10,39 @@
             <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
                 <h1 class="text-2xl font-bold text-gray-900 mb-6 text-center">S'enregistrer</h1>
 
-                {{ form_start(registrationForm, {'attr': {'class': 'space-y-4'}}) }}
-                    {{ form_row(registrationForm.email, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-1'}}) }}
-                    {{ form_row(registrationForm.plainPassword, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-1'}}) }}
+                {% if registrationForm.vars.submitted and registrationForm.email.vars.errors|length > 0 %}
+                    <div class="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">
+                        {{ email_rule }}
+                    </div>
+                {% endif %}
+                <div data-registration-target="alert"
+                     class="hidden mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+                     role="alert"></div>
+
+                {{ form_start(registrationForm, {'attr': {
+                    'class': 'space-y-4',
+                    'novalidate': 'novalidate',
+                    'data-controller': 'registration',
+                    'data-action': 'submit->registration#validate',
+                    'data-registration-student-domain-value': domains.etudiant,
+                    'data-registration-teacher-domain-value': domains.professeur,
+                    'data-registration-rule-value': email_rule,
+                }}) }}
+                    {{ form_row(registrationForm.profile, {'attr': {
+                        'data-registration-target': 'profile',
+                        'data-action': 'change->registration#updatePlaceholder',
+                    }}) }}
+                    {{ form_row(registrationForm.email, {'attr': {
+                        'data-registration-target': 'email',
+                        'data-action': 'input->registration#hideAlert',
+                    }}) }}
+                    {{ form_row(registrationForm.nom) }}
+                    {{ form_row(registrationForm.prenom) }}
+                    {{ form_row(registrationForm.plainPassword) }}
 
                     <button type="submit"
                             class="w-full py-3 px-4 rounded-lg bg-indigo-600 text-white font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition">
-                        S'enregistrer
+                        Valider
                     </button>
                 {{ form_end(registrationForm) }}
 

@@ -26,6 +26,12 @@
                     <a href="{{ path('app_home') }}" class="text-xl font-bold text-indigo-600">Conventio</a>
                     <nav class="flex items-center gap-3">
                         {% if app.user %}
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <a href="{{ path('app_admin_settings') }}"
+                                   class="py-2 px-4 rounded-lg border border-gray-300 text-gray-700 text-sm font-medium hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
+                                    Paramètres
+                                </a>
+                            {% endif %}
                             <span class="text-sm text-gray-600">{{ app.user.userIdentifier }}</span>
                             <a href="{{ path('app_logout') }}"
                                class="py-2 px-4 rounded-lg border border-gray-300 text-gray-700 text-sm font-medium hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">

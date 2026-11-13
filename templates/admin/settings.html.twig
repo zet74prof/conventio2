@@ -1,0 +1,26 @@
+{# templates/admin/settings.html.twig #}
+{% extends 'base.html.twig' %}
+{% form_theme settingsForm 'form/floating_labels.html.twig' %}
+
+{% block title %}Conventio — Paramètres{% endblock %}
+
+{% block body %}
+    <main class="min-h-screen bg-gray-50 px-4 py-10">
+        <div class="w-full max-w-md mx-auto">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+                <h1 class="text-2xl font-bold text-gray-900 mb-2 text-center">Paramètres</h1>
+                <p class="mb-6 text-sm text-gray-600 text-center">Formats d'e-mail autorisés à l'inscription (réservé aux administrateurs).</p>
+
+                {{ form_start(settingsForm, {'attr': {'class': 'space-y-4'}}) }}
+                    {{ form_row(settingsForm.email_domain_student) }}
+                    {{ form_row(settingsForm.email_domain_teacher) }}
+
+                    <button type="submit"
+                            class="w-full py-3 px-4 rounded-lg bg-indigo-600 text-white font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition">
+                        Enregistrer
+                    </button>
+                {{ form_end(settingsForm) }}
+            </div>
+        </div>
+    </main>
+{% endblock %}
