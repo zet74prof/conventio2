@@ -11,7 +11,6 @@ use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class RegistrationFormType extends AbstractType
@@ -69,14 +68,7 @@ class RegistrationFormType extends AbstractType
                         'placeholder' => ' ',
                     ],
                 ],
-                'constraints' => [
-                    new NotBlank(message: 'Veuillez choisir un mot de passe.'),
-                    new Length(
-                        min: 6,
-                        max: 4096,
-                        minMessage: 'Le mot de passe doit contenir au moins {{ limit }} caractères.'
-                    ),
-                ],
+                'constraints' => PasswordPolicy::constraints(),
             ]);
     }
 

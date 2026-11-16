@@ -45,8 +45,8 @@ class RegistrationControllerTest extends WebTestCase
         $form['registration_form[email]'] = 'pas-un-email';
         $form['registration_form[nom]'] = 'Dupont';
         $form['registration_form[prenom]'] = 'Jean';
-        $form['registration_form[plainPassword][first]'] = 'motdepasse123';
-        $form['registration_form[plainPassword][second]'] = 'motdepasse123';
+        $form['registration_form[plainPassword][first]'] = 'Mot2Passe-De-Test';
+        $form['registration_form[plainPassword][second]'] = 'Mot2Passe-De-Test';
         $client->submit($form);
 
         self::assertResponseIsUnprocessable();
@@ -70,8 +70,8 @@ class RegistrationControllerTest extends WebTestCase
         $form['registration_form[email]'] = 'jean@free.fr';
         $form['registration_form[nom]'] = 'Dupont';
         $form['registration_form[prenom]'] = 'Jean';
-        $form['registration_form[plainPassword][first]'] = 'motdepasse123';
-        $form['registration_form[plainPassword][second]'] = 'motdepasse123';
+        $form['registration_form[plainPassword][first]'] = 'Mot2Passe-De-Test';
+        $form['registration_form[plainPassword][second]'] = 'Mot2Passe-De-Test';
         $client->submit($form);
 
         self::assertResponseIsUnprocessable();
@@ -92,8 +92,8 @@ class RegistrationControllerTest extends WebTestCase
         $form['registration_form[email]'] = 'prof@ac-grenoble.fr';
         $form['registration_form[nom]'] = 'Durand';
         $form['registration_form[prenom]'] = 'Marie';
-        $form['registration_form[plainPassword][first]'] = 'motdepasse123';
-        $form['registration_form[plainPassword][second]'] = 'motdepasse123';
+        $form['registration_form[plainPassword][first]'] = 'Mot2Passe-De-Test';
+        $form['registration_form[plainPassword][second]'] = 'Mot2Passe-De-Test';
         $client->submit($form);
 
         self::assertResponseIsUnprocessable();
@@ -113,7 +113,7 @@ class RegistrationControllerTest extends WebTestCase
         $form['registration_form[email]'] = 'jean@lycee-faure.fr';
         $form['registration_form[nom]'] = 'Dupont';
         $form['registration_form[prenom]'] = 'Jean';
-        $form['registration_form[plainPassword][first]'] = 'motdepasse123';
+        $form['registration_form[plainPassword][first]'] = 'Mot2Passe-De-Test';
         $form['registration_form[plainPassword][second]'] = 'autre-chose';
         $client->submit($form);
 
@@ -136,8 +136,8 @@ class RegistrationControllerTest extends WebTestCase
         $form['registration_form[email]'] = 'nouveau@lycee-faure.fr';
         $form['registration_form[nom]'] = 'Dupont';
         $form['registration_form[prenom]'] = 'Jean';
-        $form['registration_form[plainPassword][first]'] = 'motdepasse123';
-        $form['registration_form[plainPassword][second]'] = 'motdepasse123';
+        $form['registration_form[plainPassword][first]'] = 'Mot2Passe-De-Test';
+        $form['registration_form[plainPassword][second]'] = 'Mot2Passe-De-Test';
         $client->submit($form);
 
         self::assertResponseRedirects('/login');
@@ -145,7 +145,7 @@ class RegistrationControllerTest extends WebTestCase
         $user = $entityManager->getRepository(User::class)->findOneBy(['email' => 'nouveau@lycee-faure.fr']);
         self::assertNotNull($user);
         self::assertFalse($user->isVerified());
-        self::assertNotSame('motdepasse123', $user->getPassword());
+        self::assertNotSame('Mot2Passe-De-Test', $user->getPassword());
         self::assertSame('Dupont', $user->getNom());
         self::assertSame('Jean', $user->getPrenom());
         self::assertSame('etudiant', $user->getProfile());
@@ -172,7 +172,7 @@ class RegistrationControllerTest extends WebTestCase
         $crawler = $client->request('GET', '/login');
         $form = $crawler->selectButton('Se connecter')->form();
         $form['email'] = 'nouveau@lycee-faure.fr';
-        $form['password'] = 'motdepasse123';
+        $form['password'] = 'Mot2Passe-De-Test';
         $client->submit($form);
 
         self::assertResponseRedirects('/login');
@@ -191,7 +191,7 @@ class RegistrationControllerTest extends WebTestCase
         $crawler = $client->request('GET', '/login');
         $form = $crawler->selectButton('Se connecter')->form();
         $form['email'] = 'nouveau@lycee-faure.fr';
-        $form['password'] = 'motdepasse123';
+        $form['password'] = 'Mot2Passe-De-Test';
         $client->submit($form);
 
         self::assertResponseRedirects('/');
@@ -210,8 +210,8 @@ class RegistrationControllerTest extends WebTestCase
         $form['registration_form[email]'] = 'prof@ac-grenoble.fr';
         $form['registration_form[nom]'] = 'Martin';
         $form['registration_form[prenom]'] = 'Sophie';
-        $form['registration_form[plainPassword][first]'] = 'motdepasse123';
-        $form['registration_form[plainPassword][second]'] = 'motdepasse123';
+        $form['registration_form[plainPassword][first]'] = 'Mot2Passe-De-Test';
+        $form['registration_form[plainPassword][second]'] = 'Mot2Passe-De-Test';
         $client->submit($form);
 
         self::assertResponseRedirects('/login');

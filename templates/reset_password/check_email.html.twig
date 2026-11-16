@@ -1,0 +1,25 @@
+{# templates/reset_password/check_email.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Conventio — E-mail envoyé{% endblock %}
+
+{% block body %}
+    <main class="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-10">
+        <div class="w-full max-w-md">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+                <h1 class="text-2xl font-bold text-gray-900 mb-6 text-center">E-mail envoyé</h1>
+                <div class="space-y-3 text-sm text-gray-700">
+                    <p>
+                        Si un compte correspond à votre e-mail, un message contenant un lien de réinitialisation
+                        vient de vous être envoyé. Ce lien expirera dans
+                        {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle', 'fr') }}.
+                    </p>
+                    <p>
+                        Si vous ne recevez pas d'e-mail, vérifiez votre dossier de spam ou
+                        <a href="{{ path('app_forgot_password_request') }}" class="text-indigo-600 font-medium hover:underline">réessayez</a>.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}

@@ -77,8 +77,8 @@ class AdminSettingsControllerTest extends WebTestCase
         $form['registration_form[email]'] = 'nouveau@ecole-exemple.fr';
         $form['registration_form[nom]'] = 'Dupont';
         $form['registration_form[prenom]'] = 'Jean';
-        $form['registration_form[plainPassword][first]'] = 'motdepasse123';
-        $form['registration_form[plainPassword][second]'] = 'motdepasse123';
+        $form['registration_form[plainPassword][first]'] = 'Mot2Passe-De-Test';
+        $form['registration_form[plainPassword][second]'] = 'Mot2Passe-De-Test';
         $client->submit($form);
         self::assertResponseRedirects('/login');
         self::assertNotNull($entityManager->getRepository(User::class)->findOneBy(['email' => 'nouveau@ecole-exemple.fr']));
@@ -90,8 +90,8 @@ class AdminSettingsControllerTest extends WebTestCase
         $form['registration_form[email]'] = 'ancien@lycee-faure.fr';
         $form['registration_form[nom]'] = 'Durand';
         $form['registration_form[prenom]'] = 'Marie';
-        $form['registration_form[plainPassword][first]'] = 'motdepasse123';
-        $form['registration_form[plainPassword][second]'] = 'motdepasse123';
+        $form['registration_form[plainPassword][first]'] = 'Mot2Passe-De-Test';
+        $form['registration_form[plainPassword][second]'] = 'Mot2Passe-De-Test';
         $client->submit($form);
         self::assertResponseIsUnprocessable();
         self::assertSelectorTextContains('[role="alert"]', '@ecole-exemple.fr');

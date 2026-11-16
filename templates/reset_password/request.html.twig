@@ -1,0 +1,30 @@
+{# templates/reset_password/request.html.twig #}
+{% extends 'base.html.twig' %}
+{% form_theme requestForm 'form/floating_labels.html.twig' %}
+
+{% block title %}Conventio — Mot de passe oublié{% endblock %}
+
+{% block body %}
+    <main class="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-10">
+        <div class="w-full max-w-md">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+                <h1 class="text-2xl font-bold text-gray-900 mb-6 text-center">Mot de passe oublié</h1>
+
+                {{ form_start(requestForm, {'attr': {'class': 'space-y-4', 'novalidate': 'novalidate'}}) }}
+                    {{ form_row(requestForm.email) }}
+                    <p class="text-xs text-gray-500">
+                        Saisissez votre e-mail : si un compte existe, un lien de réinitialisation vous sera envoyé.
+                    </p>
+                    <button type="submit"
+                            class="w-full py-3 px-4 rounded-lg bg-indigo-600 text-white font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition">
+                        Envoyer le lien de réinitialisation
+                    </button>
+                {{ form_end(requestForm) }}
+
+                <p class="mt-4 text-sm text-gray-600 text-center">
+                    <a href="{{ path('app_login') }}" class="text-indigo-600 font-medium hover:underline">Retour à la connexion</a>
+                </p>
+            </div>
+        </div>
+    </main>
+{% endblock %}
