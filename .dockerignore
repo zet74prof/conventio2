@@ -1,0 +1,14 @@
+**/.git
+**/.gitignore
+**/.env.local
+**/.env.*.local
+**/var/cache/**
+**/var/log/**
+**/vendor
+**/node_modules
+compose.override.yaml
+compose.prod.yaml
+.github/
+tests/
+phpunit.dist.xml
+.symfony.local.yaml
