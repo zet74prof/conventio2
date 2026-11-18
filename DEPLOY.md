@@ -1,9 +1,11 @@
 # Déploiement Debian 13 + Docker + FrankenPHP
 
 Ce dépôt contient tout le nécessaire pour faire tourner l'application avec
-[FrankenPHP](https://frankenphp.dev) (PHP 8.4 embarquant le serveur web Caddy :
-HTTP/2 et HTTP/3, HTTPS automatique via Let's Encrypt) sur un serveur Debian 13
-(« trixie »).
+[FrankenPHP](https://frankenphp.dev) (PHP 8.4 embarquant le serveur web Caddy)
+sur un serveur Debian 13 (« trixie ») **interne**. Le HTTPS public est terminé
+sur le reverse-proxy de l'établissement, qui redirige
+`https://conventio-dev.lycee-faure.fr` vers
+`http://conventio-dev.bts-sio.local` (voir section 5).
 
 Contenu ajouté :
 
@@ -60,9 +62,9 @@ Toutes les commandes Compose utilisent ensuite `.env.prod` :
 docker compose --env-file .env.prod -f compose.prod.yaml up -d --build --wait
 ```
 
-> `SERVER_NAME` doit pointer en DNS vers l'IP du serveur, et les ports 80 et 443
-> (TCP et UDP) doivent être ouverts : FrankenPHP/Caddy obtient et renouvelle le
-> certificat HTTPS tout seul.
+> `SERVER_NAME` (préfixé `http://`) doit pointer en DNS interne vers l'IP du
+> serveur ; Caddy sert du HTTP simple, sans tentative de certificat. `TRUSTED_PROXIES`
+> doit contenir l'IP du reverse-proxy.
 
 ## 3. Lancer la stack
 
@@ -71,8 +73,10 @@ docker compose --env-file .env.prod -f compose.prod.yaml up -d --build --wait
 ```
 
 Au premier démarrage, le conteneur `php` attend que PostgreSQL soit prêt puis
-exécute `doctrine:migrations:migrate`. L'application est ensuite servie sur
-https://conventio2.mon-domaine.fr
+exécute `doctrine:migrations:migrate`. L'application est ensuite joignable :
+
+- depuis l'intérieur : http://conventio-dev.bts-sio.local
+- depuis l'extérieur : https://conventio-dev.lycee-faure.fr (via le reverse-proxy)
 
 Commandes utiles :
 
@@ -93,7 +97,31 @@ Le nouveau code est compilé dans une image neuve, les migrations sont rejouées
 automatiquement, et les volumes (base de données, certificats TLS, `var/share`)
 sont conservés.
 
-## 5. Gérer les mots de passe de manière sécurisée
+## 5. Exposition via le reverse-proxy
+
+Architecture mise en œuvre :
+
+```
+Internet --HTTPS--> reverse-proxy (certificat conventio-dev.lycee-faure.fr)
+                        |  HTTP (LAN)
+                        v
+           FrankenPHP sur le serveur Debian (port 80)
+```
+
+- Le certificat public est géré par le reverse-proxy. `SERVER_NAME` commençant
+  par `http://`, Caddy ne fait pas d'ACME : il sert du HTTP simple, sans
+  redirection ni certificat. Le flux interne entre proxy et serveur circule
+  en clair sur le LAN de l'établissement.
+- Limitez l'accès au port 80 du serveur aux seules IP des reverse-proxies
+  (règle pare-feu), sinon l'application reste joignable en direct sans HTTPS.
+- `TRUSTED_PROXIES` (= IP du reverse-proxy, passé à Symfony via la config
+  `framework.trusted_proxies`) permet de tenir compte de `X-Forwarded-Proto`,
+  de sécuriser les cookies de session et de générer des URLs `https`.
+  Ne jamais mettre `*` ici.
+- Le reverse-proxy doit transmettre `X-Forwarded-Proto: https`,
+  `X-Forwarded-Host`, `X-Forwarded-For` et conserver l'en-tête `Host`.
+
+## 6. Gérer les mots de passe de manière sécurisée
 
 Principes appliqués à ce dépôt :
 
