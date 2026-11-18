@@ -19,3 +19,7 @@
 /public/assets/
 /assets/vendor/
 ###< symfony/asset-mapper ###
+
+###> déploiement prod ###
+/.env.prod
+###< déploiement prod ###

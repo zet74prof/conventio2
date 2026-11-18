@@ -45,15 +45,19 @@ sudo usermod -aG docker $USER
 ```bash
 git clone https://github.com/zet74prof/conventio2.git
 cd conventio2
+
+# Créer le fichier d'environnement à partir de l'exemple
+cp .env.prod.example .env.prod
+chmod 600 .env.prod
+$EDITOR .env.prod
 ```
 
-Créer `.env.local` (non versionné) à la racine du projet :
+Renseignez dans `.env.prod` (non versionné) au minimum :
+`SERVER_NAME`, `APP_SECRET` et `POSTGRES_PASSWORD`.
+Toutes les commandes Compass utilisent ensuite `.env.prod` :
 
-```dotenv
-# Domaine public (le certificat TLS est obtenu automatiquement par Caddy)
-SERVER_NAME=conventio2.mon-domaine.fr
-APP_SECRET=<générez avec: openssl rand -hex 32>
-POSTGRES_PASSWORD=<mot de passe PostgreSQL fort>
+```bash
+docker compose --env-file .env.prod -f compose.prod.yaml up -d --build --wait
 ```
 
 > `SERVER_NAME` doit pointer en DNS vers l'IP du serveur, et les ports 80 et 443
@@ -63,7 +67,10 @@ POSTGRES_PASSWORD=<mot de passe PostgreSQL fort>
 ## 3. Lancer la stack
 
 ```bash
-docker compose -f compose.prod.yaml up -d --build --wait
+docker compose --env-file .env.prod -f compose.prod.yaml up -d --build --wait
+```
+
+docker compose --env-file .env.prod -f compose.prod.yaml up -d --build --wait
 ```
 
 Au premier démarrage, le conteneur `php` attend que PostgreSQL soit prêt puis
@@ -73,18 +80,56 @@ https://conventio2.mon-domaine.fr
 Commandes utiles :
 
 ```bash
-docker compose -f compose.prod.yaml logs -f php          # suivre les logs
-docker compose -f compose.prod.yaml ps                   # état des services
-docker compose -f compose.prod.yaml exec php php bin/console about
+docker compose --env-file .env.prod -f compose.prod.yaml logs -f php          # suivre les logs
+docker compose --env-file .env.prod -f compose.prod.yaml ps                   # état des services
+docker compose --env-file .env.prod -f compose.prod.yaml exec php php bin/console about
 ```
 
 ## 4. Mettre à jour l'application
 
 ```bash
 git pull
-docker compose -f compose.prod.yaml up -d --build --wait
+docker compose --env-file .env.prod -f compose.prod.yaml up -d --build --wait
 ```
 
 Le nouveau code est compilé dans une image neuve, les migrations sont rejouées
 automatiquement, et les volumes (base de données, certificats TLS, `var/share`)
 sont conservés.
+
+## 5. Gérer les mots de passe de manière sécurisée
+
+Principes appliqués à ce dépôt :
+
+1. **Aucun secret dans Git.** Les valeurs réelles vivent uniquement dans
+   `.env.prod` sur le serveur (non versionné, `chmod 600`, propriétaire de
+   votre utilisateur). Seul `.env.prod.example`, avec des valeurs factices,
+   est committé.
+2. **Générez les secrets, ne les inventez pas.** Chaque secret vient d'un
+   générateur aléatoire :
+   ```bash
+   openssl rand -hex 32      # APP_SECRET
+   openssl rand -base64 24  # POSTGRES_PASSWORD
+   ```
+3. **Minimisez l'exposition.** Un utilisateur déclaré dans `.env.prod` sert
+   uniquement `php` et `database` ; limitez les accès sudo sur le serveur.
+   Gardez en tête que tout compte pouvant lancer Docker *ou* lire
+   `.env.prod` voit les secrets (`docker inspect` les affiche en clair) :
+   l'accès au groupe `docker` équivaut à un accès root.
+4. **Rotation.** Pour changer `POSTGRES_PASSWORD`, modifiez `.env.prod` puis
+   `docker compose --env-file .env.prod -f compose.prod.yaml up -d --force-recreate`
+   (le mot de passe est répercuté par la variable d'environnement, la donnée
+   elle-même est conservée dans le volume). Pour la base, préférez confirmer
+   avec `ALTER USER conventio2 WITH PASSWORD '...'` si vous la modifiez à chaud.
+5. **Sauvegardes.** Protégez aussi les sauvegardes :
+   ```bash
+   docker compose --env-file .env.prod -f compose.prod.yaml exec database \
+     pg_dump -U conventio2 conventio2 | gzip | \
+     openssl enc -aes-256-cbc -pbkdf2 -out conventio2-$(date +%F).sql.gz.enc
+   ```
+   Conservez la phrase de passe de sauvegarde séparément du serveur.
+
+Pour un isolement plus fort (plusieurs serveurs, secrets partagés entre
+services), regardez [Docker Secrets](https://docs.docker.com/compose/use-secrets/)
+ou le [Symfony Secrets Vault](https://symfony.com/doc/current/configuration/secrets.html),
+ qui chiffre les secrets dans le dépôt ; `docker compose --env-file` suffit
+ pour un serveur unique comme ici.
