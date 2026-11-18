@@ -54,7 +54,7 @@ $EDITOR .env.prod
 
 Renseignez dans `.env.prod` (non versionné) au minimum :
 `SERVER_NAME`, `APP_SECRET` et `POSTGRES_PASSWORD`.
-Toutes les commandes Compass utilisent ensuite `.env.prod` :
+Toutes les commandes Compose utilisent ensuite `.env.prod` :
 
 ```bash
 docker compose --env-file .env.prod -f compose.prod.yaml up -d --build --wait
@@ -67,9 +67,6 @@ docker compose --env-file .env.prod -f compose.prod.yaml up -d --build --wait
 ## 3. Lancer la stack
 
 ```bash
-docker compose --env-file .env.prod -f compose.prod.yaml up -d --build --wait
-```
-
 docker compose --env-file .env.prod -f compose.prod.yaml up -d --build --wait
 ```
 
